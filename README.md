@@ -8,7 +8,7 @@
 
 ---
 
-## Trabajos realizados y subidos
+## Objetivo de la aplicación
 
 - AlcanzAR es una aplicación móvil de carpooling dinámico diseñada para conectar personas que realizan trayectos similares, ya sean viajes diarios de trabajo/estudio o traslados de larga distancia entre distintas localidades.
 
