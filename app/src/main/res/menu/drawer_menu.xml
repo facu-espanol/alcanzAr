@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- BLOQUE 1 -->
+    <group android:id="@+id/group_inicio">
+        <item
+            android:id="@+id/nav_inicio"
+            android:title="Inicio"
+            android:icon="@android:drawable/ic_menu_view"/>
+    </group>
+
+    <!-- BLOQUE 2 -->
+    <group android:id="@+id/group_peticiones">
+        <item
+            android:id="@+id/nav_realizar_peticion"
+            android:title="Realizar una petición"
+            android:icon="@android:drawable/ic_input_add"/>
+
+        <item
+            android:id="@+id/nav_buscar_peticiones"
+            android:title="Buscar peticiones"
+            android:icon="@android:drawable/ic_menu_search"/>
+    </group>
+
+    <!-- BLOQUE 3 -->
+    <group android:id="@+id/group_viajes">
+        <item
+            android:id="@+id/nav_publicar_viaje"
+            android:title="Publicar un viaje"
+            android:icon="@android:drawable/ic_menu_upload"/>
+
+        <item
+            android:id="@+id/nav_viajes_cercanos"
+            android:title="Viajes cercanos"
+            android:icon="@android:drawable/ic_menu_mylocation"/>
+    </group>
+
+    <!-- BLOQUE 4 -->
+    <group android:id="@+id/group_chats">
+        <item
+            android:id="@+id/nav_chats"
+            android:title="Mis chats"
+            android:icon="@android:drawable/ic_dialog_email"/>
+    </group>
+
+    <!-- BLOQUE 5 -->
+    <group android:id="@+id/group_notificaciones">
+        <item
+            android:id="@+id/nav_notificaciones"
+            android:title="Notificaciones"
+            android:icon="@android:drawable/ic_dialog_info"/>
+    </group>
+
+    <!-- BLOQUE 6 -->
+    <group android:id="@+id/group_acerca_de">
+        <item
+            android:id="@+id/nav_acerca_de"
+            android:title="Acerca de"
+            android:icon="@android:drawable/ic_dialog_info"/>
+    </group>
+    <item
+        android:id="@+id/nav_modo"
+        android:title="Cambiar tema"
+        android:icon="@android:drawable/ic_menu_day"/>
+</menu>
