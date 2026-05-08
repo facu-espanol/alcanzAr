@@ -1,4 +1,4 @@
-Viaje a Buenos Aires - 18:00
-Viaje a Córdoba - 09:30
-Viaje a La Plata - 14:00
-Viaje a Rosario - 20:15
+Viaje;Desde: Barrio Sur;A: UNPSJB;Horario: Mañana;Plazas: 1
+Viaje;Desde: Trelew Centro;A: Zona Sur;Horario: Tarde;Plazas: 1
+Viaje;Desde: Playa Unión;A: Plaza San Martín;Horario: Noche;Plazas: 4
+General;Desde: El Doradillo;A: Puerto Madryn;Horario: Mediodía;Precio: $800
