@@ -1,4 +1,4 @@
-package com.example.alcanzar.presentation.ui.login
+package com.example.alcanzar.presentation.ui.registro
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,11 +8,10 @@ import com.example.alcanzar.data.LoginRepositoryImpl
 import com.example.alcanzar.domain.usecase.CrearCuentaUseCase
 import com.example.alcanzar.domain.usecase.IniciarSesionUseCase
 import com.example.alcanzar.presentation.ui.bienvenida.BienvenidaActivity
-import com.example.alcanzar.presentation.ui.registro.RegistroActivity
 import com.example.alcanzar.presentation.viewmodel.LoginViewModel
 import com.example.alcanzar.ui.theme.AlcanzARTheme
 
-class LoginActivity : ComponentActivity() {
+class RegistroActivity : ComponentActivity() {
 
     private lateinit var viewModel: LoginViewModel
 
@@ -24,25 +23,23 @@ class LoginActivity : ComponentActivity() {
         val crearCuentaUseCase = CrearCuentaUseCase(repository)
 
         viewModel = LoginViewModel(
-            iniciarSesionUseCase,
-            crearCuentaUseCase
+            iniciarSesionUseCase = iniciarSesionUseCase,
+            crearCuentaUseCase = crearCuentaUseCase
         )
 
         setContent {
             AlcanzARTheme {
-                LoginScreen(
-                    onLogin = { usuario, password ->
-                        viewModel.iniciarSesion(usuario, password)
+                RegistroScreen(
+                    onCrearCuenta = { usuario, password ->
+                        viewModel.crearCuenta(usuario, password)
                     },
-                    onCrearCuentaClick = {
-                        startActivity(
-                            Intent(this, RegistroActivity::class.java)
-                        )
-                    },
-                    onLoginSuccess = {
+                    onRegistroSuccess = {
                         startActivity(
                             Intent(this, BienvenidaActivity::class.java)
                         )
+                        finish()
+                    },
+                    onVolverLogin = {
                         finish()
                     }
                 )

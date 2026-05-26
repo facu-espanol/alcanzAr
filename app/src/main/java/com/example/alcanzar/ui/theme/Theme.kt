@@ -5,10 +5,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 private val AlcanzARColors = lightColorScheme(
-    primary = Color(0xFF1976D2),   // azul
+    primary = AlcanzarPrimary,
     onPrimary = Color.White,
-    background = Color.White,
-    onBackground = Color.Black
+    background = AlcanzarBackground,
+    onBackground = AlcanzarTextPrimary,
+    surface = AlcanzarSurface,
+    onSurface = AlcanzarTextPrimary
 )
 
 @Composable

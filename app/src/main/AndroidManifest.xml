@@ -18,7 +18,9 @@
         <activity
             android:name=".presentation.ui.acerca.AcercaActivity"
             android:exported="false" />
-
+        <activity
+            android:name=".presentation.ui.registro.RegistroActivity"
+            android:exported="false" />
         <activity
             android:name=".presentation.ui.perfil.PerfilActivity"
             android:exported="false" />
