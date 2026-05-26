@@ -1,16 +1,19 @@
 package com.example.alcanzar.perfil
+
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import com.example.alcanzar.databinding.ActivityPerfilBinding
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import com.example.alcanzar.ui.theme.AlcanzARTheme
 
-class Perfil : AppCompatActivity() {
-
-    private lateinit var binding: ActivityPerfilBinding
+class Perfil : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityPerfilBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContent {
+            AlcanzARTheme {
+                PerfilScreen()
+            }
+        }
     }
 }
