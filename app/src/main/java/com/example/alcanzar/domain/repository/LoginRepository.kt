@@ -1,5 +1,6 @@
 package com.example.alcanzar.domain.repository
 
 interface LoginRepository {
-    fun login(usuario: String, password: String): Boolean
+    fun iniciarSesion(usuario: String, password: String): Boolean
+    fun crearCuenta(usuario: String, password: String): Boolean
 }
