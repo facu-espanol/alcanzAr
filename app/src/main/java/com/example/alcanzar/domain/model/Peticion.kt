@@ -1,5 +1,5 @@
-// Peticion.kt
-package com.example.alcanzar.peticiones
+package com.example.alcanzar.domain.model
+
 data class Peticion(
     val tipo: String,
     val desde: String,

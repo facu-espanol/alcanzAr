@@ -1,5 +1,6 @@
-package com.example.alcanzar.perfil
+package com.example.alcanzar.presentation.ui.perfil
 
+import android.R
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -10,7 +11,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
-import com.example.alcanzar.R
 import androidx.compose.foundation.background
 
 @Composable
@@ -27,7 +27,7 @@ fun PerfilScreen() {
     ) {
 
         Icon(
-            painter = painterResource(android.R.drawable.ic_menu_myplaces),
+            painter = painterResource(R.drawable.ic_menu_myplaces),
             contentDescription = "Perfil",
             tint = Color(0xFF1976D2), // tu azul
             modifier = Modifier.size(100.dp)

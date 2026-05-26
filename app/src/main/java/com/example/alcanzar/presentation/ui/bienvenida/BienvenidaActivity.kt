@@ -1,12 +1,12 @@
-package com.example.alcanzar.bienvenida
+package com.example.alcanzar.presentation.ui.bienvenida
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.example.alcanzar.acerca.AcercaActivity
-import com.example.alcanzar.perfil.Perfil
-import com.example.alcanzar.peticiones.PeticionesActivity
+import com.example.alcanzar.presentation.ui.acerca.AcercaActivity
+import com.example.alcanzar.presentation.ui.perfil.PerfilActivity
+import com.example.alcanzar.presentation.ui.peticiones.PeticionesActivity
 import com.example.alcanzar.ui.theme.AlcanzARTheme
 
 class BienvenidaActivity : ComponentActivity() {
@@ -18,7 +18,7 @@ class BienvenidaActivity : ComponentActivity() {
             AlcanzARTheme {
                 BienvenidaScreen(
                     onPerfilClick = {
-                        startActivity(Intent(this, Perfil::class.java))
+                        startActivity(Intent(this, PerfilActivity::class.java))
                     },
                     onAcercaClick = {
                         startActivity(Intent(this, AcercaActivity::class.java))

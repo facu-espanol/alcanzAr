@@ -1,29 +1,24 @@
-package com.example.alcanzar.peticiones
+package com.example.alcanzar.presentation.ui.bienvenida
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.*
-import androidx.compose.ui.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PeticionesScreen(
-    peticiones: List<Peticion>,
+fun BienvenidaScreen(
     onPerfilClick: () -> Unit,
-    onInicioClick: () -> Unit,
-    onAcercaClick: () -> Unit
+    onAcercaClick: () -> Unit,
+    onPeticionesClick: () -> Unit
 ) {
     val drawerState =
         rememberDrawerState(
@@ -42,7 +37,6 @@ fun PeticionesScreen(
                 DrawerItem("Inicio") {
                     scope.launch {
                         drawerState.close()
-                        onInicioClick()
                     }
                 }
 
@@ -57,6 +51,7 @@ fun PeticionesScreen(
                 DrawerItem("Buscar peticiones") {
                     scope.launch {
                         drawerState.close()
+                        onPeticionesClick()
                     }
                 }
 
@@ -153,31 +148,29 @@ fun PeticionesScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(padding)
+                    .padding(24.dp),
+
+                horizontalAlignment =
+                    Alignment.CenterHorizontally,
+
+                verticalArrangement =
+                    Arrangement.Center
             ) {
 
                 Text(
-                    text = "Peticiones cercanas",
-                    fontSize = 22.sp,
-                    modifier =
-                        Modifier.padding(
-                            start = 18.dp,
-                            top = 20.dp,
-                            bottom = 12.dp
-                        )
+                    text = "Bienvenido a AlcanzAR",
+                    style =
+                        MaterialTheme.typography.headlineSmall
                 )
 
-                LazyColumn(
-                    modifier =
-                        Modifier.fillMaxSize(),
-                    contentPadding =
-                        PaddingValues(14.dp),
-                    verticalArrangement =
-                        Arrangement.spacedBy(12.dp)
-                ) {
-                    items(peticiones) {
-                        PeticionCard(it)
-                    }
-                }
+                Spacer(
+                    Modifier.height(16.dp)
+                )
+
+                Text(
+                    text =
+                        "Una aplicación diseñada para la comunidad"
+                )
             }
         }
     }
@@ -185,20 +178,19 @@ fun PeticionesScreen(
 
 @Composable
 fun DrawerItem(
-    texto: String,
+    text: String,
     onClick: () -> Unit
 ) {
-    TextButton(
+    NavigationDrawerItem(
+        label = {
+            Text(text)
+        },
+        selected = false,
         onClick = onClick,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 8.dp)
-    ) {
-        Text(
-            text = texto,
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Start,
-            color = MaterialTheme.colorScheme.onBackground
-        )
-    }
+        modifier =
+            Modifier.padding(
+                horizontal = 12.dp,
+                vertical = 4.dp
+            )
+    )
 }

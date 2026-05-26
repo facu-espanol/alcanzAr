@@ -1,4 +1,4 @@
-package com.example.alcanzar.login
+package com.example.alcanzar.presentation.ui.login
 
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -6,35 +6,25 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.input.*
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.*
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
 fun LoginScreen(
-    usuarioCorrecto: String,
-    passwordCorrecta: String,
+    onLogin: (String, String) -> Boolean,
     onLoginSuccess: () -> Unit
 ) {
     val context = LocalContext.current
 
-    var usuario by remember {
-        mutableStateOf("")
-    }
-
-    var password by remember {
-        mutableStateOf("")
-    }
-
-    var passwordVisible by remember {
-        mutableStateOf(false)
-    }
+    var usuario by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var passwordVisible by remember { mutableStateOf(false) }
 
     Box(
         modifier = Modifier
@@ -42,12 +32,10 @@ fun LoginScreen(
             .background(MaterialTheme.colorScheme.background)
             .padding(24.dp)
     ) {
-
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center
         ) {
-
             Text(
                 text = "AlcanzAR",
                 fontSize = 32.sp,
@@ -56,9 +44,7 @@ fun LoginScreen(
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
 
-            Spacer(
-                modifier = Modifier.height(40.dp)
-            )
+            Spacer(modifier = Modifier.height(40.dp))
 
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -67,69 +53,44 @@ fun LoginScreen(
                 Column(
                     modifier = Modifier.padding(24.dp)
                 ) {
-
                     OutlinedTextField(
                         value = usuario,
-                        onValueChange = {
-                            usuario = it
-                        },
-                        label = {
-                            Text("Usuario")
-                        },
-                        modifier =
-                            Modifier.fillMaxWidth(),
+                        onValueChange = { usuario = it },
+                        label = { Text("Usuario") },
+                        modifier = Modifier.fillMaxWidth(),
                         singleLine = true
                     )
 
-                    Spacer(
-                        modifier = Modifier.height(16.dp)
-                    )
+                    Spacer(modifier = Modifier.height(16.dp))
 
                     OutlinedTextField(
                         value = password,
-                        onValueChange = {
-                            password = it
-                        },
-                        label = {
-                            Text("Contraseña")
-                        },
-                        modifier =
-                            Modifier.fillMaxWidth(),
+                        onValueChange = { password = it },
+                        label = { Text("Contraseña") },
+                        modifier = Modifier.fillMaxWidth(),
                         singleLine = true,
-
                         visualTransformation =
-                            if (passwordVisible)
-                                VisualTransformation.None
-                            else
-                                PasswordVisualTransformation(),
-
+                            if (passwordVisible) VisualTransformation.None
+                            else PasswordVisualTransformation(),
                         trailingIcon = {
                             IconButton(
-                                onClick = {
-                                    passwordVisible =
-                                        !passwordVisible
-                                }
+                                onClick = { passwordVisible = !passwordVisible }
                             ) {
                                 Icon(
-                                    imageVector =
-                                        Icons.Default.Visibility,
-                                    contentDescription =
-                                        "Ver contraseña"
+                                    imageVector = Icons.Default.Visibility,
+                                    contentDescription = "Ver contraseña"
                                 )
                             }
                         }
                     )
 
-                    Spacer(
-                        modifier = Modifier.height(24.dp)
-                    )
+                    Spacer(modifier = Modifier.height(24.dp))
 
                     Button(
                         onClick = {
-                            if (
-                                usuario == usuarioCorrecto &&
-                                password == passwordCorrecta
-                            ) {
+                            val loginCorrecto = onLogin(usuario, password)
+
+                            if (loginCorrecto) {
                                 onLoginSuccess()
                             } else {
                                 Toast.makeText(
@@ -139,8 +100,7 @@ fun LoginScreen(
                                 ).show()
                             }
                         },
-                        modifier =
-                            Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth()
                     ) {
                         Text("Ingresar")
                     }

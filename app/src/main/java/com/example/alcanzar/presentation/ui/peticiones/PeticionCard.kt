@@ -1,4 +1,4 @@
-package com.example.alcanzar.peticiones
+package com.example.alcanzar.presentation.ui.peticiones
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -9,6 +9,7 @@ import androidx.compose.ui.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
+import com.example.alcanzar.domain.model.Peticion
 
 @Composable
 fun PeticionCard(

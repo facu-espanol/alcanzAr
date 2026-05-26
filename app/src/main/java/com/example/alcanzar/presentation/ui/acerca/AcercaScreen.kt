@@ -1,4 +1,4 @@
-package com.example.alcanzar.acerca
+package com.example.alcanzar.presentation.ui.acerca
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*

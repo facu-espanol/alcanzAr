@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.alcanzar.databinding.ActivityMainBinding
-import com.example.alcanzar.login.LoginActivity
+import com.example.alcanzar.presentation.ui.login.LoginActivity
 
 class MainActivity : AppCompatActivity() {
 

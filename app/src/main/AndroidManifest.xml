@@ -12,17 +12,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Alcanzar">
         <activity
-            android:name=".peticiones.PeticionesActivity"
+            android:name=".presentation.ui.peticiones.PeticionesActivity"
             android:exported="false" />
         <activity
-            android:name=".acerca.AcercaActivity"
+            android:name=".presentation.ui.acerca.AcercaActivity"
             android:exported="false" />
+
         <activity
-            android:name=".perfil.Perfil"
-            android:exported="false" /> <!-- Pantalla de bienvenida -->
-        <activity android:name=".bienvenida.BienvenidaActivity" /> <!-- Login (pantalla inicial) -->
+            android:name=".presentation.ui.perfil.PerfilActivity"
+            android:exported="false" />
+        <!-- Pantalla de bienvenida -->
+        <activity android:name=".presentation.ui.bienvenida.BienvenidaActivity" /> <!-- Login (pantalla inicial) -->
         <activity
-            android:name=".login.LoginActivity"
+            android:name=".presentation.ui.login.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
