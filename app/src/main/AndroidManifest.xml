@@ -11,6 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Alcanzar">
+        <activity android:name=".presentation.ui.viajes.ViajesActivity" />
         <activity
             android:name=".presentation.ui.peticiones.PeticionesActivity"
             android:exported="false" />

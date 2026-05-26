@@ -1,4 +1,4 @@
-package com.example.alcanzar.presentation.ui.peticiones
+package com.example.alcanzar.presentation.ui.viajes
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,36 +7,36 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import com.example.alcanzar.data.PeticionRepositoryImpl
-import com.example.alcanzar.domain.usecase.ObtenerPeticionesUseCase
+import com.example.alcanzar.data.ViajeRepositoryImpl
+import com.example.alcanzar.domain.usecase.ObtenerViajesUseCase
 import com.example.alcanzar.presentation.ui.acerca.AcercaActivity
 import com.example.alcanzar.presentation.ui.bienvenida.BienvenidaActivity
 import com.example.alcanzar.presentation.ui.perfil.PerfilActivity
-import com.example.alcanzar.presentation.ui.viajes.ViajesActivity
-import com.example.alcanzar.presentation.viewmodel.PeticionesViewModel
+import com.example.alcanzar.presentation.viewmodel.ViajesViewModel
 import com.example.alcanzar.ui.theme.AlcanzARTheme
 
-class PeticionesActivity : ComponentActivity() {
-
-    private lateinit var viewModel: PeticionesViewModel
+class ViajesActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val repository = PeticionRepositoryImpl(this)
-        val useCase = ObtenerPeticionesUseCase(repository)
-        viewModel = PeticionesViewModel(useCase)
+        val vm = ViajesViewModel(
+            ObtenerViajesUseCase(
+                ViajeRepositoryImpl()
+            )
+        )
 
         setContent {
             AlcanzARTheme {
-                val uiState by viewModel.uiState.collectAsState()
+
+                val uiState by vm.uiState.collectAsState()
 
                 LaunchedEffect(Unit) {
-                    viewModel.cargarPeticiones()
+                    vm.cargarViajes()
                 }
 
-                PeticionesScreen(
-                    peticiones = uiState.peticiones,
+                ViajesScreen(
+                    viajes = uiState.viajes,
 
                     onPerfilClick = {
                         startActivity(
@@ -54,12 +54,6 @@ class PeticionesActivity : ComponentActivity() {
                     onAcercaClick = {
                         startActivity(
                             Intent(this, AcercaActivity::class.java)
-                        )
-                    },
-
-                    onViajesClick = {
-                        startActivity(
-                            Intent(this, ViajesActivity::class.java)
                         )
                     }
                 )

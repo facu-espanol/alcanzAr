@@ -23,7 +23,8 @@ fun PeticionesScreen(
     peticiones: List<Peticion>,
     onPerfilClick: () -> Unit,
     onInicioClick: () -> Unit,
-    onAcercaClick: () -> Unit
+    onAcercaClick: () -> Unit,
+    onViajesClick: () -> Unit
 ) {
     val drawerState =
         rememberDrawerState(
@@ -71,6 +72,7 @@ fun PeticionesScreen(
                 DrawerItem("Viajes cercanos") {
                     scope.launch {
                         drawerState.close()
+                        onViajesClick()
                     }
                 }
 
