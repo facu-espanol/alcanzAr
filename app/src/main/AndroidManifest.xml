@@ -13,6 +13,10 @@
         android:theme="@style/Theme.Alcanzar">
         <activity android:name=".presentation.ui.viajes.ViajesActivity" />
         <activity
+            android:name=".presentation.ui.crearviaje.CrearViajeActivity" />
+        <activity
+            android:name=".presentation.ui.crearpeticion.CrearPeticionActivity" />
+        <activity
             android:name=".presentation.ui.peticiones.PeticionesActivity"
             android:exported="false" />
         <activity

@@ -1,45 +1,39 @@
-package com.example.alcanzar.presentation.ui.viajes
+package com.example.alcanzar.presentation.ui.crearviaje
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import com.example.alcanzar.data.ViajeRepositoryImpl
-import com.example.alcanzar.domain.usecase.ObtenerViajesUseCase
+import com.example.alcanzar.domain.usecase.GuardarViajeUseCase
 import com.example.alcanzar.presentation.ui.acerca.AcercaActivity
 import com.example.alcanzar.presentation.ui.bienvenida.BienvenidaActivity
-import com.example.alcanzar.presentation.ui.crearpeticion.CrearPeticionActivity
-import com.example.alcanzar.presentation.ui.crearviaje.CrearViajeActivity
 import com.example.alcanzar.presentation.ui.perfil.PerfilActivity
 import com.example.alcanzar.presentation.ui.peticiones.PeticionesActivity
-import com.example.alcanzar.presentation.viewmodel.ViajesViewModel
+import com.example.alcanzar.presentation.ui.viajes.ViajesActivity
+import com.example.alcanzar.presentation.viewmodel.CrearViajeViewModel
 import com.example.alcanzar.ui.theme.AlcanzARTheme
+import android.util.Log
+import android.widget.Toast
+import com.example.alcanzar.presentation.ui.crearpeticion.CrearPeticionActivity
 
-class ViajesActivity : ComponentActivity() {
+class CrearViajeActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val vm = ViajesViewModel(
-            ObtenerViajesUseCase(
-                ViajeRepositoryImpl()
-            )
-        )
+        val repository = ViajeRepositoryImpl()
+
+        val guardarViajeUseCase =
+            GuardarViajeUseCase(repository)
+
+        val vm =
+            CrearViajeViewModel(guardarViajeUseCase)
 
         setContent {
             AlcanzARTheme {
 
-                val uiState by vm.uiState.collectAsState()
-
-                LaunchedEffect(Unit) {
-                    vm.cargarViajes()
-                }
-
-                ViajesScreen(
-                    viajes = uiState.viajes,
+                CrearViajeScreen(
 
                     onPerfilClick = {
                         startActivity(
@@ -51,7 +45,18 @@ class ViajesActivity : ComponentActivity() {
                         startActivity(
                             Intent(this, BienvenidaActivity::class.java)
                         )
-                        finish()
+                    },
+
+                    onPeticionesClick = {
+                        startActivity(
+                            Intent(this, PeticionesActivity::class.java)
+                        )
+                    },
+
+                    onViajesClick = {
+                        startActivity(
+                            Intent(this, ViajesActivity::class.java)
+                        )
                     },
 
                     onAcercaClick = {
@@ -60,15 +65,21 @@ class ViajesActivity : ComponentActivity() {
                         )
                     },
 
-                    onPeticionesClick = {
+                    onPublicarClick = { viaje ->
+
+                        vm.guardarViaje(viaje)
+
+                        Toast.makeText(
+                            this,
+                            "Viaje publicado",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
                         startActivity(
-                            Intent(this, PeticionesActivity::class.java)
+                            Intent(this, ViajesActivity::class.java)
                         )
-                    },
-                    onCrearViajeClick = {
-                        startActivity(
-                            Intent(this, CrearViajeActivity::class.java)
-                        )
+
+                        finish()
                     },
                     onCrearPeticionClick = {
                         startActivity(
@@ -78,7 +89,8 @@ class ViajesActivity : ComponentActivity() {
                             )
                         )
                     },
-                )
+
+                    )
             }
         }
     }

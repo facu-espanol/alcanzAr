@@ -1,44 +1,39 @@
-package com.example.alcanzar.presentation.ui.peticiones
+package com.example.alcanzar.presentation.ui.crearpeticion
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import com.example.alcanzar.data.PeticionRepositoryImpl
-import com.example.alcanzar.domain.usecase.ObtenerPeticionesUseCase
+import com.example.alcanzar.domain.usecase.GuardarPeticionUseCase
 import com.example.alcanzar.presentation.ui.acerca.AcercaActivity
 import com.example.alcanzar.presentation.ui.bienvenida.BienvenidaActivity
-import com.example.alcanzar.presentation.ui.crearpeticion.CrearPeticionActivity
 import com.example.alcanzar.presentation.ui.crearviaje.CrearViajeActivity
 import com.example.alcanzar.presentation.ui.perfil.PerfilActivity
+import com.example.alcanzar.presentation.ui.peticiones.PeticionesActivity
 import com.example.alcanzar.presentation.ui.viajes.ViajesActivity
-import com.example.alcanzar.presentation.viewmodel.PeticionesViewModel
+import com.example.alcanzar.presentation.viewmodel.CrearPeticionViewModel
 import com.example.alcanzar.ui.theme.AlcanzARTheme
 
-class PeticionesActivity : ComponentActivity() {
-
-    private lateinit var viewModel: PeticionesViewModel
+class CrearPeticionActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val repository = PeticionRepositoryImpl()
-        val useCase = ObtenerPeticionesUseCase(repository)
-        viewModel = PeticionesViewModel(useCase)
+
+        val useCase =
+            GuardarPeticionUseCase(repository)
+
+        val vm =
+            CrearPeticionViewModel(useCase)
 
         setContent {
+
             AlcanzARTheme {
-                val uiState by viewModel.uiState.collectAsState()
 
-                LaunchedEffect(Unit) {
-                    viewModel.cargarPeticiones()
-                }
-
-                PeticionesScreen(
-                    peticiones = uiState.peticiones,
+                CrearPeticionScreen(
 
                     onPerfilClick = {
                         startActivity(
@@ -50,12 +45,11 @@ class PeticionesActivity : ComponentActivity() {
                         startActivity(
                             Intent(this, BienvenidaActivity::class.java)
                         )
-                        finish()
                     },
 
-                    onAcercaClick = {
+                    onPeticionesClick = {
                         startActivity(
-                            Intent(this, AcercaActivity::class.java)
+                            Intent(this, PeticionesActivity::class.java)
                         )
                     },
 
@@ -64,19 +58,42 @@ class PeticionesActivity : ComponentActivity() {
                             Intent(this, ViajesActivity::class.java)
                         )
                     },
+
+                    onAcercaClick = {
+                        startActivity(
+                            Intent(this, AcercaActivity::class.java)
+                        )
+                    },
+
+                    onCrearPeticionClick = {
+                        // estoy en CrearPeticionActivity
+                        // no hace falta hacer nada
+                    },
+
+                    onPublicarClick = { peticion ->
+
+                        vm.guardarPeticion(peticion)
+
+                        Toast.makeText(
+                            this,
+                            "Petición publicada",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                        startActivity(
+                            Intent(
+                                this,
+                                PeticionesActivity::class.java
+                            )
+                        )
+
+                        finish()
+                    },
                     onCrearViajeClick = {
                         startActivity(
                             Intent(this, CrearViajeActivity::class.java)
                         )
                     },
-                    onCrearPeticionClick = {
-                        startActivity(
-                            Intent(
-                                this,
-                                CrearPeticionActivity::class.java
-                            )
-                        )
-                    }
                 )
             }
         }

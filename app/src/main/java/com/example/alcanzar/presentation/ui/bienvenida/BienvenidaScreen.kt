@@ -6,6 +6,7 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.material3.HorizontalDivider
+import com.example.alcanzar.presentation.ui.components.AppDrawer
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,7 +20,9 @@ fun BienvenidaScreen(
     onPerfilClick: () -> Unit,
     onAcercaClick: () -> Unit,
     onPeticionesClick: () -> Unit,
-    onViajesClick: () -> Unit
+    onViajesClick: () -> Unit,
+    onCrearViajeClick: () -> Unit,
+    onCrearPeticionClick: () -> Unit
 ) {
     val drawerState =
         rememberDrawerState(
@@ -33,69 +36,51 @@ fun BienvenidaScreen(
         drawerState = drawerState,
 
         drawerContent = {
-            ModalDrawerSheet {
 
-                DrawerItem("Inicio") {
+            AppDrawer(
+
+                onInicioClick = {
                     scope.launch {
                         drawerState.close()
                     }
-                }
+                },
 
-                HorizontalDivider()
-
-                DrawerItem("Realizar una petición") {
-                    scope.launch {
-                        drawerState.close()
-                    }
-                }
-
-                DrawerItem("Buscar peticiones") {
+                onPeticionesClick = {
                     scope.launch {
                         drawerState.close()
                         onPeticionesClick()
                     }
-                }
+                },
 
-                HorizontalDivider()
-
-                DrawerItem("Publicar un viaje") {
-                    scope.launch {
-                        drawerState.close()
-                    }
-                }
-
-                DrawerItem("Viajes cercanos") {
+                onViajesClick = {
                     scope.launch {
                         drawerState.close()
                         onViajesClick()
                     }
-                }
+                },
 
-                HorizontalDivider()
-
-                DrawerItem("Mis chats") {
-                    scope.launch {
-                        drawerState.close()
-                    }
-                }
-
-                HorizontalDivider()
-
-                DrawerItem("Notificaciones") {
-                    scope.launch {
-                        drawerState.close()
-                    }
-                }
-
-                HorizontalDivider()
-
-                DrawerItem("Acerca de") {
+                onAcercaClick = {
                     scope.launch {
                         drawerState.close()
                         onAcercaClick()
                     }
+                },
+
+                onCrearViajeClick = {
+                    scope.launch {
+                        drawerState.close()
+                        onCrearViajeClick()
+                    }
+                },
+
+                onCrearPeticionClick = {
+                    scope.launch {
+                        drawerState.close()
+                        onCrearPeticionClick()
+                    }
                 }
-            }
+
+            )
         }
     ) {
 
@@ -176,23 +161,4 @@ fun BienvenidaScreen(
             }
         }
     }
-}
-
-@Composable
-fun DrawerItem(
-    text: String,
-    onClick: () -> Unit
-) {
-    NavigationDrawerItem(
-        label = {
-            Text(text)
-        },
-        selected = false,
-        onClick = onClick,
-        modifier =
-            Modifier.padding(
-                horizontal = 12.dp,
-                vertical = 4.dp
-            )
-    )
 }

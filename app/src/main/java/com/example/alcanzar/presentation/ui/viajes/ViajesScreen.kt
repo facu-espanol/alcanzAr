@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.*
 import com.example.alcanzar.domain.model.Viaje
+import com.example.alcanzar.presentation.ui.components.AppDrawer
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -21,7 +22,10 @@ fun ViajesScreen(
     viajes: List<Viaje>,
     onPerfilClick: () -> Unit,
     onInicioClick: () -> Unit,
-    onAcercaClick: () -> Unit
+    onPeticionesClick: () -> Unit,
+    onAcercaClick: () -> Unit,
+    onCrearViajeClick: () -> Unit,
+    onCrearPeticionClick: () -> Unit
 ) {
 
     val drawerState =
@@ -36,52 +40,50 @@ fun ViajesScreen(
         drawerState = drawerState,
 
         drawerContent = {
-            ModalDrawerSheet {
 
-                DrawerItem("Inicio") {
+            AppDrawer(
+
+                onInicioClick = {
                     scope.launch {
                         drawerState.close()
                         onInicioClick()
                     }
-                }
+                },
 
-                HorizontalDivider()
+                onPeticionesClick = {
+                    scope.launch {
+                        drawerState.close()
+                        onPeticionesClick()
+                    }
+                },
 
-                DrawerItem("Realizar una petición") {
+                onViajesClick = {
                     scope.launch {
                         drawerState.close()
                     }
-                }
+                },
 
-                DrawerItem("Buscar peticiones") {
-                    scope.launch {
-                        drawerState.close()
-                    }
-                }
-
-                HorizontalDivider()
-
-                DrawerItem("Publicar un viaje") {
-                    scope.launch {
-                        drawerState.close()
-                    }
-                }
-
-                DrawerItem("Viajes cercanos") {
-                    scope.launch {
-                        drawerState.close()
-                    }
-                }
-
-                HorizontalDivider()
-
-                DrawerItem("Acerca de") {
+                onAcercaClick = {
                     scope.launch {
                         drawerState.close()
                         onAcercaClick()
                     }
-                }
-            }
+                },
+
+                onCrearViajeClick = {
+                    scope.launch {
+                        drawerState.close()
+                        onCrearViajeClick()
+                    }
+                },
+
+                onCrearPeticionClick = {
+                    scope.launch {
+                        drawerState.close()
+                        onCrearPeticionClick()
+                    }
+                },
+            )
         }
     ) {
 
@@ -166,25 +168,5 @@ fun ViajesScreen(
                 }
             }
         }
-    }
-}
-
-@Composable
-fun DrawerItem(
-    texto: String,
-    onClick: () -> Unit
-) {
-    TextButton(
-        onClick = onClick,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 8.dp)
-    ) {
-        Text(
-            text = texto,
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Start,
-            color = MaterialTheme.colorScheme.onBackground
-        )
     }
 }

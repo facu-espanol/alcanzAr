@@ -2,25 +2,22 @@ package com.example.alcanzar.presentation.ui.peticiones
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Handyman
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.*
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.alcanzar.domain.model.Peticion
 
 @Composable
 fun PeticionCard(
     peticion: Peticion
 ) {
+
     Card(
         modifier =
-            Modifier.fillMaxWidth(),
-
-        shape =
-            MaterialTheme.shapes.large
+            Modifier.fillMaxWidth()
     ) {
 
         Row(
@@ -34,31 +31,33 @@ fun PeticionCard(
             ) {
 
                 Text(
-                    text = peticion.tipo,
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.Bold
+                    text = peticion.titulo,
+                    fontSize = 20.sp
                 )
 
                 Spacer(
                     Modifier.height(8.dp)
                 )
 
-                Text(" ${peticion.desde}")
-                Text(" ${peticion.destino}")
-                Text(" ${peticion.horario}")
-                Text(" ${peticion.extras}")
+                Text(
+                    text = peticion.descripcion
+                )
+
+                Text(
+                    text =
+                        "${peticion.barrio}, ${peticion.ciudad}"
+                )
+
+                Text(
+                    text =
+                        "${peticion.fecha} - ${peticion.hora}"
+                )
             }
 
-            Spacer(
-                Modifier.width(12.dp)
-            )
-
             Icon(
-                Icons.Default.AccountCircle,
-                null,
-                tint = Color.Gray,
-                modifier =
-                    Modifier.size(68.dp)
+                imageVector =
+                    Icons.Default.Handyman,
+                contentDescription = null
             )
         }
     }

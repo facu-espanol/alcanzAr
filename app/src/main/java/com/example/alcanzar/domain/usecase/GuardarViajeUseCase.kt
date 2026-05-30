@@ -1,0 +1,15 @@
+package com.example.alcanzar.domain.usecase
+
+import com.example.alcanzar.domain.model.Viaje
+import com.example.alcanzar.domain.repository.ViajeRepository
+
+class GuardarViajeUseCase(
+    private val repository: ViajeRepository
+) {
+
+    operator fun invoke(
+        viaje: Viaje
+    ) {
+        repository.guardarViaje(viaje)
+    }
+}
