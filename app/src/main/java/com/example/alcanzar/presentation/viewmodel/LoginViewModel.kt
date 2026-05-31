@@ -9,11 +9,11 @@ class LoginViewModel(
     private val crearCuentaUseCase: CrearCuentaUseCase
 ) : ViewModel() {
 
-    fun iniciarSesion(usuario: String, password: String): Boolean {
-        return iniciarSesionUseCase(usuario, password)
+    fun iniciarSesion(usuario: String, password: String, onResult: (String?) -> Unit) {
+        iniciarSesionUseCase(usuario, password, onResult)
     }
 
-    fun crearCuenta(usuario: String, password: String): Boolean {
-        return crearCuentaUseCase(usuario, password)
+    fun crearCuenta(usuario: String, password: String, onResult: (String?) -> Unit) {
+        crearCuentaUseCase(usuario, password, onResult)
     }
 }

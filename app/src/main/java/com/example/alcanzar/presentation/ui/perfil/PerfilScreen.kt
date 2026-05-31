@@ -29,7 +29,7 @@ fun PerfilScreen() {
         Icon(
             painter = painterResource(R.drawable.ic_menu_myplaces),
             contentDescription = "Perfil",
-            tint = Color(0xFF1976D2), // tu azul
+            tint = Color(0xFF1976D2), // El azul caracteristico de nuestra app
             modifier = Modifier.size(100.dp)
         )
 
@@ -59,7 +59,7 @@ fun PerfilScreen() {
 
         Button(
             onClick = {
-                // despues le agregamos lógica
+                // Boton de cerrar sesion sin logica por ahora
             },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(

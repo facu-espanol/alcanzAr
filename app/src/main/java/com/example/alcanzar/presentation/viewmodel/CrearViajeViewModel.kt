@@ -8,7 +8,7 @@ class CrearViajeViewModel(
     private val guardarViajeUseCase: GuardarViajeUseCase
 ) : ViewModel() {
 
-    fun guardarViaje(viaje: Viaje) {
-        guardarViajeUseCase(viaje)
+    fun guardarViaje(viaje: Viaje, onResult: (Boolean) -> Unit) {
+        guardarViajeUseCase.execute(viaje, onResult)
     }
 }

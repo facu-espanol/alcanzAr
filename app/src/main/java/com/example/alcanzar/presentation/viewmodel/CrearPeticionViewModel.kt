@@ -8,9 +8,7 @@ class CrearPeticionViewModel(
     private val guardarPeticionUseCase: GuardarPeticionUseCase
 ) : ViewModel() {
 
-    fun guardarPeticion(
-        peticion: Peticion
-    ) {
-        guardarPeticionUseCase(peticion)
+    fun guardarPeticion(peticion: Peticion, onResult: (Boolean) -> Unit) {
+        guardarPeticionUseCase.execute(peticion, onResult)
     }
 }

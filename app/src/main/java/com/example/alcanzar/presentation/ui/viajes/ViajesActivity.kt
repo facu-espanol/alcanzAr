@@ -8,11 +8,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import com.example.alcanzar.data.ViajeRepositoryImpl
+import com.example.alcanzar.data.datasource.ViajeFirestoreDataSource
 import com.example.alcanzar.domain.usecase.ObtenerViajesUseCase
+import com.google.firebase.firestore.FirebaseFirestore
 import com.example.alcanzar.presentation.ui.acerca.AcercaActivity
 import com.example.alcanzar.presentation.ui.bienvenida.BienvenidaActivity
 import com.example.alcanzar.presentation.ui.crearpeticion.CrearPeticionActivity
 import com.example.alcanzar.presentation.ui.crearviaje.CrearViajeActivity
+import com.example.alcanzar.presentation.ui.detalleviaje.DetalleViajeActivity
 import com.example.alcanzar.presentation.ui.perfil.PerfilActivity
 import com.example.alcanzar.presentation.ui.peticiones.PeticionesActivity
 import com.example.alcanzar.presentation.viewmodel.ViajesViewModel
@@ -23,10 +26,10 @@ class ViajesActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val dataSource = ViajeFirestoreDataSource(FirebaseFirestore.getInstance())
+        val repository = ViajeRepositoryImpl(dataSource)
         val vm = ViajesViewModel(
-            ObtenerViajesUseCase(
-                ViajeRepositoryImpl()
-            )
+            ObtenerViajesUseCase(repository)
         )
 
         setContent {
@@ -40,7 +43,13 @@ class ViajesActivity : ComponentActivity() {
 
                 ViajesScreen(
                     viajes = uiState.viajes,
-
+                    onRefresh = {
+                        vm.cargarViajes()
+                    },
+                    onViajeClick = { viaje ->
+                        DetalleViajeActivity.viajeSeleccionado = viaje
+                        startActivity(Intent(this, DetalleViajeActivity::class.java))
+                    },
                     onPerfilClick = {
                         startActivity(
                             Intent(this, PerfilActivity::class.java)

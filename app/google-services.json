@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "833882310703",
+    "project_id": "alcanzar-59d0c",
+    "storage_bucket": "alcanzar-59d0c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:833882310703:android:66f3a3dd2ddfdea59b9eda",
+        "android_client_info": {
+          "package_name": "com.example.alcanzar"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEwoec6MAJi_1x-02ommWNUhMLRYVmm3w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

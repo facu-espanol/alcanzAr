@@ -10,14 +10,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.alcanzar.domain.model.Peticion
 
+import androidx.compose.foundation.clickable
+
 @Composable
 fun PeticionCard(
-    peticion: Peticion
+    peticion: Peticion,
+    onClick: () -> Unit
 ) {
 
     Card(
         modifier =
-            Modifier.fillMaxWidth()
+            Modifier.fillMaxWidth().clickable { onClick() }
     ) {
 
         Row(

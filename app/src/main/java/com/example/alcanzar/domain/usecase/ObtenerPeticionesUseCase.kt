@@ -6,7 +6,7 @@ import com.example.alcanzar.domain.repository.PeticionRepository
 class ObtenerPeticionesUseCase(
     private val repository: PeticionRepository
 ) {
-    operator fun invoke(): List<Peticion> {
-        return repository.obtenerPeticiones()
+    fun execute(onResult: (List<Peticion>) -> Unit) {
+        repository.obtenerPeticiones(onResult)
     }
 }

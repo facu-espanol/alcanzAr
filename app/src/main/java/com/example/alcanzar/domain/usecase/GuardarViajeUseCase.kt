@@ -7,9 +7,7 @@ class GuardarViajeUseCase(
     private val repository: ViajeRepository
 ) {
 
-    operator fun invoke(
-        viaje: Viaje
-    ) {
-        repository.guardarViaje(viaje)
+    fun execute(viaje: Viaje, onResult: (Boolean) -> Unit) {
+        repository.guardarViaje(viaje, onResult)
     }
 }

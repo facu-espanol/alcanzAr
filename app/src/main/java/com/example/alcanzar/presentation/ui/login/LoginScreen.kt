@@ -24,9 +24,8 @@ import com.example.alcanzar.ui.theme.*
 
 @Composable
 fun LoginScreen(
-    onLogin: (String, String) -> Boolean,
-    onCrearCuentaClick: () -> Unit,
-    onLoginSuccess: () -> Unit
+    onLogin: (String, String) -> Unit,
+    onCrearCuentaClick: () -> Unit
 ) {
     val context = LocalContext.current
 
@@ -212,17 +211,7 @@ fun LoginScreen(
 
                     Button(
                         onClick = {
-                            val loginCorrecto = onLogin(usuario, password)
-
-                            if (loginCorrecto) {
-                                onLoginSuccess()
-                            } else {
-                                Toast.makeText(
-                                    context,
-                                    "Usuario o contraseña incorrectos",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
+                            onLogin(usuario, password)
                         },
                         modifier = Modifier
                             .fillMaxWidth()

@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Redirige automáticamente al login
+        // Te redirige  al login
         startActivity(Intent(this, LoginActivity::class.java))
         finish()
     }

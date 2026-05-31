@@ -1,11 +1,14 @@
 package com.example.alcanzar.presentation.ui.crearviaje
 
+import CrearViajeScreen
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.example.alcanzar.data.ViajeRepositoryImpl
+import com.example.alcanzar.data.datasource.ViajeFirestoreDataSource
 import com.example.alcanzar.domain.usecase.GuardarViajeUseCase
+import com.google.firebase.firestore.FirebaseFirestore
 import com.example.alcanzar.presentation.ui.acerca.AcercaActivity
 import com.example.alcanzar.presentation.ui.bienvenida.BienvenidaActivity
 import com.example.alcanzar.presentation.ui.perfil.PerfilActivity
@@ -22,13 +25,10 @@ class CrearViajeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val repository = ViajeRepositoryImpl()
-
-        val guardarViajeUseCase =
-            GuardarViajeUseCase(repository)
-
-        val vm =
-            CrearViajeViewModel(guardarViajeUseCase)
+        val dataSource = ViajeFirestoreDataSource(FirebaseFirestore.getInstance())
+        val repository = ViajeRepositoryImpl(dataSource)
+        val guardarViajeUseCase = GuardarViajeUseCase(repository)
+        val vm = CrearViajeViewModel(guardarViajeUseCase)
 
         setContent {
             AlcanzARTheme {
@@ -66,20 +66,26 @@ class CrearViajeActivity : ComponentActivity() {
                     },
 
                     onPublicarClick = { viaje ->
+                        vm.guardarViaje(viaje) { success ->
+                            if (success) {
+                                Toast.makeText(
+                                    this,
+                                    "Viaje publicado",
+                                    Toast.LENGTH_SHORT
+                                ).show()
 
-                        vm.guardarViaje(viaje)
-
-                        Toast.makeText(
-                            this,
-                            "Viaje publicado",
-                            Toast.LENGTH_SHORT
-                        ).show()
-
-                        startActivity(
-                            Intent(this, ViajesActivity::class.java)
-                        )
-
-                        finish()
+                                startActivity(
+                                    Intent(this, ViajesActivity::class.java)
+                                )
+                                finish()
+                            } else {
+                                Toast.makeText(
+                                    this,
+                                    "Error al publicar viaje",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
                     },
                     onCrearPeticionClick = {
                         startActivity(

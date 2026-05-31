@@ -17,9 +17,8 @@ class ViajesViewModel(
         _uiState.asStateFlow()
 
     fun cargarViajes() {
-        _uiState.value =
-            ViajesUiState(
-                viajes = obtenerViajesUseCase()
-            )
+        obtenerViajesUseCase.execute { lista ->
+            _uiState.value = ViajesUiState(viajes = lista)
+        }
     }
 }

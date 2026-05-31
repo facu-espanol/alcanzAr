@@ -11,12 +11,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.alcanzar.domain.model.Viaje
 
+import androidx.compose.foundation.clickable
+
 @Composable
 fun ViajeCard(
-    viaje: Viaje
+    viaje: Viaje,
+    onClick: () -> Unit
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth().clickable { onClick() }
     ) {
 
         Row(

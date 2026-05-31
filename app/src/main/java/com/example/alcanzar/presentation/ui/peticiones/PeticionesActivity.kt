@@ -8,15 +8,18 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import com.example.alcanzar.data.PeticionRepositoryImpl
+import com.example.alcanzar.data.datasource.PeticionFirestoreDataSource
 import com.example.alcanzar.domain.usecase.ObtenerPeticionesUseCase
 import com.example.alcanzar.presentation.ui.acerca.AcercaActivity
 import com.example.alcanzar.presentation.ui.bienvenida.BienvenidaActivity
 import com.example.alcanzar.presentation.ui.crearpeticion.CrearPeticionActivity
 import com.example.alcanzar.presentation.ui.crearviaje.CrearViajeActivity
+import com.example.alcanzar.presentation.ui.detallepeticion.DetallePeticionActivity
 import com.example.alcanzar.presentation.ui.perfil.PerfilActivity
 import com.example.alcanzar.presentation.ui.viajes.ViajesActivity
 import com.example.alcanzar.presentation.viewmodel.PeticionesViewModel
 import com.example.alcanzar.ui.theme.AlcanzARTheme
+import com.google.firebase.firestore.FirebaseFirestore
 
 class PeticionesActivity : ComponentActivity() {
 
@@ -25,7 +28,8 @@ class PeticionesActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val repository = PeticionRepositoryImpl()
+        val dataSource = PeticionFirestoreDataSource(FirebaseFirestore.getInstance())
+        val repository = PeticionRepositoryImpl(dataSource)
         val useCase = ObtenerPeticionesUseCase(repository)
         viewModel = PeticionesViewModel(useCase)
 
@@ -39,7 +43,13 @@ class PeticionesActivity : ComponentActivity() {
 
                 PeticionesScreen(
                     peticiones = uiState.peticiones,
-
+                    onRefresh = {
+                        viewModel.cargarPeticiones()
+                    },
+                    onPeticionClick = { peticion ->
+                        DetallePeticionActivity.peticionSeleccionada = peticion
+                        startActivity(Intent(this, DetallePeticionActivity::class.java))
+                    },
                     onPerfilClick = {
                         startActivity(
                             Intent(this, PerfilActivity::class.java)

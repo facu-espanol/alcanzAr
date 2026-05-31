@@ -6,10 +6,7 @@ import com.example.alcanzar.domain.repository.PeticionRepository
 class GuardarPeticionUseCase(
     private val repository: PeticionRepository
 ) {
-
-    operator fun invoke(
-        peticion: Peticion
-    ) {
-        repository.guardarPeticion(peticion)
+    fun execute(peticion: Peticion, onResult: (Boolean) -> Unit) {
+        repository.guardarPeticion(peticion, onResult)
     }
 }

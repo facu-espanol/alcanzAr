@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.sp
 import com.example.alcanzar.ui.theme.*
 @Composable
 fun RegistroScreen(
-    onCrearCuenta: (String, String) -> Boolean,
+    onCrearCuenta: (String, String, (Boolean) -> Unit) -> Unit,
     onRegistroSuccess: () -> Unit,
     onVolverLogin: () -> Unit
 ) {
@@ -256,21 +256,13 @@ fun RegistroScreen(
                                 return@Button
                             }
 
-                            val cuentaCreada = onCrearCuenta(usuario, password)
-
-                            if (cuentaCreada) {
-                                Toast.makeText(
-                                    context,
-                                    "Cuenta creada correctamente",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                                onRegistroSuccess()
-                            } else {
-                                Toast.makeText(
-                                    context,
-                                    "Ese usuario ya existe",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                            val cuentaCreada = onCrearCuenta(usuario, password) { success ->
+                                if (success) {
+                                    Toast.makeText(context, "Cuenta creada correctamente", Toast.LENGTH_SHORT).show()
+                                    onRegistroSuccess()
+                                } else {
+                                    Toast.makeText(context, "Ese usuario ya existe", Toast.LENGTH_SHORT).show()
+                                }
                             }
                         },
                         modifier = Modifier

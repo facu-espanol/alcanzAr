@@ -5,7 +5,7 @@ import com.example.alcanzar.domain.repository.LoginRepository
 class IniciarSesionUseCase(
     private val repository: LoginRepository
 ) {
-    operator fun invoke(usuario: String, password: String): Boolean {
-        return repository.iniciarSesion(usuario, password)
+    operator fun invoke(usuario: String, password: String, onResult: (String?) -> Unit) {
+        repository.iniciarSesion(usuario, password, onResult)
     }
 }
