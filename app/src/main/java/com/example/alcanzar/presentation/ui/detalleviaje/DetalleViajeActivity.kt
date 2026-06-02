@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -29,7 +30,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -46,7 +46,9 @@ import com.example.alcanzar.domain.model.Viaje
 import com.example.alcanzar.domain.usecase.ObtenerUsuariosPorIdsUseCase
 import com.example.alcanzar.domain.usecase.ParticiparEnViajeUseCase
 import com.example.alcanzar.presentation.ui.components.DetailItem
+import com.example.alcanzar.presentation.ui.components.UserAvatar
 import com.example.alcanzar.presentation.viewmodel.DetalleViajeViewModel
+import com.example.alcanzar.presentation.viewmodel.ParticipacionResult
 import com.example.alcanzar.ui.theme.AlcanzARTheme
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -84,11 +86,17 @@ class DetalleViajeActivity : ComponentActivity() {
                         inscriptos = usuariosInscriptos,
                         onBack = { finish() },
                         onParticipar = {
-                            viewModel.alternarParticipacion(this) { success ->
-                                if (success) {
-                                    Toast.makeText(this, "Operación exitosa", Toast.LENGTH_SHORT).show()
-                                } else {
-                                    Toast.makeText(this, "Error al procesar", Toast.LENGTH_SHORT).show()
+                            viewModel.alternarParticipacion(this) { result ->
+                                when (result) {
+                                    ParticipacionResult.Success -> {
+                                        Toast.makeText(this, "Operación exitosa", Toast.LENGTH_SHORT).show()
+                                    }
+                                    ParticipacionResult.SinCupos -> {
+                                        Toast.makeText(this, "No quedan plazas disponibles", Toast.LENGTH_LONG).show()
+                                    }
+                                    ParticipacionResult.Error -> {
+                                        Toast.makeText(this, "Error al procesar", Toast.LENGTH_SHORT).show()
+                                    }
                                 }
                             }
                         }
@@ -111,6 +119,7 @@ fun DetalleViajeContent(
     val userId = SessionManager.obtenerUsuarioId(context) ?: ""
     val yaParticipa = viaje.idPasajeros.contains(userId)
     val esCreador = viaje.conductorId == userId
+    val estaLleno = viaje.idPasajeros.size >= viaje.plazas
 
     Scaffold(
         topBar = {
@@ -175,30 +184,24 @@ fun DetalleViajeContent(
                     ) {
                         items(inscriptos) { usuario ->
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Image(
-                                    painter = rememberAsyncImagePainter(
-                                        model = if (usuario.fotoUrl.isNotBlank()) usuario.fotoUrl else "https://cdn-icons-png.flaticon.com/512/149/149071.png"
-                                    ),
-                                    contentDescription = usuario.nombreCompleto,
-                                    modifier = Modifier
-                                        .size(60.dp)
-                                        .clip(CircleShape),
-                                    contentScale = ContentScale.Crop
-                                )
+                                UserAvatar(fotoUrl = usuario.fotoUrl)
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Text(
-                                    text = usuario.nombreCompleto.split(" ").firstOrNull() ?: "",
+                                    text = usuario.nombreCompleto,
                                     fontSize = 12.sp,
-                                    fontWeight = FontWeight.Medium
+                                    fontWeight = FontWeight.Medium,
+                                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                                    modifier = Modifier.width(80.dp),
+                                    maxLines = 2,
+                                    lineHeight = 14.sp
                                 )
                             }
                         }
                     }
                 }
             } else {
-                // Si no es creador, solo ve el numerito
                 Surface(
-                    color = MaterialTheme.colorScheme.primaryContainer,
+                    color = if (estaLleno) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.primaryContainer,
                     shape = RoundedCornerShape(12.dp)
                 ) {
                     Row(
@@ -208,8 +211,9 @@ fun DetalleViajeContent(
                         Icon(Icons.Default.Group, null, modifier = Modifier.size(20.dp))
                         Spacer(Modifier.width(8.dp))
                         Text(
-                            text = "${viaje.idPasajeros.size} personas anotadas",
-                            fontWeight = FontWeight.Bold
+                            text = if (estaLleno) "Viaje completo" else "${viaje.idPasajeros.size}/${viaje.plazas} personas anotadas",
+                            fontWeight = FontWeight.Bold,
+                            color = if (estaLleno) MaterialTheme.colorScheme.onErrorContainer else MaterialTheme.colorScheme.onPrimaryContainer
                         )
                     }
                 }
@@ -226,14 +230,21 @@ fun DetalleViajeContent(
                     Button(
                         onClick = onParticipar,
                         modifier = Modifier.weight(1f),
+                        enabled = yaParticipa || !estaLleno,
                         colors = if (yaParticipa) 
                             ButtonDefaults.buttonColors(containerColor = Color.Gray) 
-                        else 
+                        else if (estaLleno)
+                            ButtonDefaults.buttonColors(containerColor = Color.LightGray)
+                        else
                             ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)),
                         shape = MaterialTheme.shapes.medium
                     ) {
                         Text(
-                            if (yaParticipa) "DARSE DE BAJA" else "SUMARSE AL VIAJE",
+                            text = when {
+                                yaParticipa -> "DARSE DE BAJA"
+                                estaLleno -> "VIAJE COMPLETO"
+                                else -> "SUMARSE AL VIAJE"
+                            },
                             fontWeight = FontWeight.Bold
                         )
                     }

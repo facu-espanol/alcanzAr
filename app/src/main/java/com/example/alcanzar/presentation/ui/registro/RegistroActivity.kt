@@ -84,7 +84,8 @@ class RegistroActivity : ComponentActivity() {
             scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 70, baos)
             val bytes = baos.toByteArray()
 
-            Base64.encodeToString(bytes, Base64.DEFAULT)
+            val base64 = Base64.encodeToString(bytes, Base64.NO_WRAP)
+            "data:image/jpeg;base64,$base64"
         } catch (e: Exception) {
             ""
         }

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -45,6 +46,7 @@ import com.example.alcanzar.domain.model.Usuario
 import com.example.alcanzar.domain.usecase.ObtenerUsuariosPorIdsUseCase
 import com.example.alcanzar.domain.usecase.PostularseAPeticionUseCase
 import com.example.alcanzar.presentation.ui.components.DetailItem
+import com.example.alcanzar.presentation.ui.components.UserAvatar
 import com.example.alcanzar.presentation.viewmodel.DetallePeticionViewModel
 import com.example.alcanzar.ui.theme.AlcanzARTheme
 import com.google.firebase.firestore.FirebaseFirestore
@@ -179,21 +181,16 @@ fun DetallePeticionContent(
                     ) {
                         items(candidatos) { usuario ->
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Image(
-                                    painter = rememberAsyncImagePainter(
-                                        model = if (usuario.fotoUrl.isNotBlank()) usuario.fotoUrl else "https://cdn-icons-png.flaticon.com/512/149/149071.png"
-                                    ),
-                                    contentDescription = usuario.nombreCompleto,
-                                    modifier = Modifier
-                                        .size(60.dp)
-                                        .clip(CircleShape),
-                                    contentScale = ContentScale.Crop
-                                )
+                                UserAvatar(fotoUrl = usuario.fotoUrl)
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Text(
-                                    text = usuario.nombreCompleto.split(" ").firstOrNull() ?: "",
+                                    text = usuario.nombreCompleto,
                                     fontSize = 12.sp,
-                                    fontWeight = FontWeight.Medium
+                                    fontWeight = FontWeight.Medium,
+                                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                                    modifier = Modifier.width(80.dp),
+                                    maxLines = 2,
+                                    lineHeight = 14.sp
                                 )
                             }
                         }
@@ -261,6 +258,18 @@ fun DetallePeticionContent(
                     fontWeight = FontWeight.Medium
                 )
             }
+        }
+    }
+}
+
+@Composable
+fun DetailItem(icon: ImageVector, label: String, value: String, modifier: Modifier = Modifier) {
+    Row(modifier = modifier.padding(vertical = 4.dp), verticalAlignment = Alignment.CenterVertically) {
+        Icon(icon, null, tint = Color(0xFF1976D2), modifier = Modifier.size(24.dp))
+        Spacer(Modifier.width(8.dp))
+        Column {
+            Text(label, fontSize = 12.sp, color = Color.Gray)
+            Text(value, fontSize = 16.sp, fontWeight = FontWeight.Medium)
         }
     }
 }

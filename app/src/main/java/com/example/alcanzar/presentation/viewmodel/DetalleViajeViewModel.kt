@@ -10,6 +10,12 @@ import com.example.alcanzar.domain.usecase.ParticiparEnViajeUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
+sealed class ParticipacionResult {
+    object Success : ParticipacionResult()
+    object SinCupos : ParticipacionResult()
+    object Error : ParticipacionResult()
+}
+
 class DetalleViajeViewModel(
     private val participarEnViajeUseCase: ParticiparEnViajeUseCase,
     private val obtenerUsuariosPorIdsUseCase: ObtenerUsuariosPorIdsUseCase
@@ -32,10 +38,16 @@ class DetalleViajeViewModel(
         }
     }
 
-    fun alternarParticipacion(context: Context, onResult: (Boolean) -> Unit) {
+    fun alternarParticipacion(context: Context, onResult: (ParticipacionResult) -> Unit) {
         val viaje = _viajeState.value ?: return
         val userId = SessionManager.obtenerUsuarioId(context) ?: return
         val yaParticipa = viaje.idPasajeros.contains(userId)
+
+        // Validación de cupos (solo si se quiere unir)
+        if (!yaParticipa && viaje.idPasajeros.size >= viaje.plazas) {
+            onResult(ParticipacionResult.SinCupos)
+            return
+        }
 
         participarEnViajeUseCase.execute(viaje.id, userId, !yaParticipa) { success ->
             if (success) {
@@ -47,8 +59,10 @@ class DetalleViajeViewModel(
                 val viajeActualizado = viaje.copy(idPasajeros = nuevaLista)
                 _viajeState.value = viajeActualizado
                 cargarUsuariosInscriptos(nuevaLista)
+                onResult(ParticipacionResult.Success)
+            } else {
+                onResult(ParticipacionResult.Error)
             }
-            onResult(success)
         }
     }
 }

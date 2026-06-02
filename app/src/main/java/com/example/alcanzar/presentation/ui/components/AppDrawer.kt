@@ -3,7 +3,10 @@ package com.example.alcanzar.presentation.ui.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -31,74 +34,94 @@ fun AppDrawer(
     ModalDrawerSheet(
         modifier = Modifier.width(300.dp)
     ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+        ) {
+            DrawerHeader()
 
-        DrawerHeader()
+            Spacer(
+                modifier = Modifier.height(12.dp)
+            )
 
-        Spacer(
-            modifier = Modifier.height(12.dp)
-        )
+            DrawerSectionTitle("GENERAL")
 
-        DrawerSectionTitle("GENERAL")
+            DrawerItem(
+                icon = Icons.Default.Home,
+                text = "Inicio",
+                onClick = onInicioClick
+            )
 
-        DrawerItem(
-            icon = Icons.Default.Home,
-            text = "Inicio",
-            onClick = onInicioClick
-        )
+            HorizontalDivider(
+                modifier = Modifier.padding(vertical = 8.dp)
+            )
 
-        DrawerItem(
-            icon = Icons.Default.Search,
-            text = "Realizar petición",
-            onClick = onCrearPeticionClick
-        )
+            DrawerSectionTitle("PETICIONES")
 
-        DrawerItem(
-            icon = Icons.Default.Search,
-            text = "Buscar peticiones",
-            onClick = onPeticionesClick
-        )
+            DrawerItem(
+                icon = Icons.Default.AddCircleOutline,
+                text = "Realizar petición",
+                onClick = onCrearPeticionClick
+            )
 
-        DrawerItem(
-            icon = Icons.Default.DirectionsCar,
-            text = "Publicar viaje",
-            onClick = onCrearViajeClick
-        )
+            DrawerItem(
+                icon = Icons.Default.Search,
+                text = "Buscar peticiones",
+                onClick = onPeticionesClick
+            )
 
-        DrawerItem(
-            icon = Icons.Default.DirectionsCar,
-            text = "Viajes cercanos",
-            onClick = onViajesClick
-        )
+            HorizontalDivider(
+                modifier = Modifier.padding(vertical = 8.dp)
+            )
 
-        HorizontalDivider(
-            modifier = Modifier.padding(vertical = 12.dp)
-        )
+            DrawerSectionTitle("VIAJES")
 
-        DrawerSectionTitle("SOCIAL")
+            DrawerItem(
+                icon = Icons.Default.AddLocationAlt,
+                text = "Publicar viaje",
+                onClick = onCrearViajeClick
+            )
 
-        DrawerItem(
-            icon = Icons.Default.Chat,
-            text = "Mis chats",
-            onClick = { }
-        )
+            DrawerItem(
+                icon = Icons.Default.DirectionsCar,
+                text = "Viajes cercanos",
+                onClick = onViajesClick
+            )
 
-        DrawerItem(
-            icon = Icons.Default.Notifications,
-            text = "Notificaciones",
-            onClick = onNotificacionesClick
-        )
+            HorizontalDivider(
+                modifier = Modifier.padding(vertical = 12.dp)
+            )
 
-        HorizontalDivider(
-            modifier = Modifier.padding(vertical = 12.dp)
-        )
+            DrawerSectionTitle("SOCIAL")
 
-        DrawerSectionTitle("OTROS")
+            DrawerItem(
+                icon = Icons.AutoMirrored.Filled.Chat,
+                text = "Mis chats",
+                onClick = { }
+            )
 
-        DrawerItem(
-            icon = Icons.Default.Info,
-            text = "Acerca de",
-            onClick = onAcercaClick
-        )
+            DrawerItem(
+                icon = Icons.Default.Notifications,
+                text = "Notificaciones",
+                onClick = onNotificacionesClick
+            )
+
+            HorizontalDivider(
+                modifier = Modifier.padding(vertical = 12.dp)
+            )
+
+            DrawerSectionTitle("OTROS")
+
+            DrawerItem(
+                icon = Icons.Default.Info,
+                text = "Acerca de",
+                onClick = onAcercaClick
+            )
+            
+            // Espacio extra al final para que la barra del sistema no tape el último item
+            Spacer(modifier = Modifier.height(32.dp))
+        }
     }
 }
 

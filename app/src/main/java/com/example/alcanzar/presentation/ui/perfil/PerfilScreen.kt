@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.alcanzar.data.session.SessionManager
 import com.example.alcanzar.presentation.viewmodel.PerfilViewModel
+import com.example.alcanzar.ui.theme.*
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -46,10 +47,10 @@ fun PerfilScreen(
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Mi Perfil", fontWeight = FontWeight.Bold) },
+                title = { Text("Mi Perfil", fontWeight = FontWeight.Bold, color = Color.White) },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    containerColor = AlcanzarPrimary,
+                    titleContentColor = Color.White
                 )
             )
         }
@@ -58,10 +59,13 @@ fun PerfilScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .background(MaterialTheme.colorScheme.surface)
+                .background(AlcanzarBackground)
         ) {
             if (state.loading) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center),
+                    color = AlcanzarPrimary
+                )
             } else {
                 val usuario = state.usuario
                 Column(
@@ -75,13 +79,18 @@ fun PerfilScreen(
                         modifier = Modifier
                             .size(120.dp)
                             .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)),
+                            .background(AlcanzarPrimary.copy(alpha = 0.1f)),
                         contentAlignment = Alignment.Center
                     ) {
                         val bitmap = remember(usuario?.fotoUrl) {
                             if (!usuario?.fotoUrl.isNullOrBlank()) {
                                 try {
-                                    val imageBytes = Base64.decode(usuario?.fotoUrl, Base64.DEFAULT)
+                                    val pureBase64 = if (usuario?.fotoUrl?.contains(",") == true) {
+                                        usuario.fotoUrl.split(",")[1]
+                                    } else {
+                                        usuario?.fotoUrl
+                                    }
+                                    val imageBytes = Base64.decode(pureBase64, Base64.DEFAULT)
                                     BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
                                 } catch (e: Exception) {
                                     null
@@ -101,7 +110,7 @@ fun PerfilScreen(
                                 imageVector = Icons.Default.AccountCircle,
                                 contentDescription = "Avatar",
                                 modifier = Modifier.size(100.dp),
-                                tint = MaterialTheme.colorScheme.primary
+                                tint = AlcanzarPrimary
                             )
                         }
                     }
@@ -111,9 +120,9 @@ fun PerfilScreen(
                     // Nombre del Usuario
                     Text(
                         text = usuario?.nombreCompleto ?: "Usuario",
-                        style = MaterialTheme.typography.headlineMedium,
+                        fontSize = 26.sp,
                         fontWeight = FontWeight.ExtraBold,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = AlcanzarTextPrimary
                     )
 
                     Spacer(modifier = Modifier.height(32.dp))
@@ -151,8 +160,8 @@ fun PerfilScreen(
                             .height(56.dp),
                         shape = RoundedCornerShape(16.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.errorContainer,
-                            contentColor = MaterialTheme.colorScheme.onErrorContainer
+                            containerColor = Color(0xFFD32F2F),
+                            contentColor = Color.White
                         )
                     ) {
                         Icon(Icons.AutoMirrored.Filled.Logout, contentDescription = null)
@@ -177,7 +186,7 @@ fun RatingCard(
         modifier = modifier,
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.elevatedCardColors(
-            containerColor = MaterialTheme.colorScheme.secondaryContainer
+            containerColor = Color.White
         )
     ) {
         Column(
@@ -187,14 +196,14 @@ fun RatingCard(
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                tint = AlcanzarPrimary,
                 modifier = Modifier.size(32.dp)
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = title,
                 style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.7f)
+                color = AlcanzarTextSecondary
             )
             Spacer(modifier = Modifier.height(4.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -202,7 +211,7 @@ fun RatingCard(
                     text = String.format(Locale.getDefault(), "%.1f", rating),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSecondaryContainer
+                    color = AlcanzarPrimary
                 )
                 Icon(
                     imageVector = Icons.Default.Star,
@@ -214,7 +223,7 @@ fun RatingCard(
             Text(
                 text = "$total viajes",
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.6f)
+                color = AlcanzarTextMuted
             )
         }
     }
