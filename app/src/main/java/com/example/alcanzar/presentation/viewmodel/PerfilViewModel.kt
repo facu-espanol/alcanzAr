@@ -8,7 +8,10 @@ import com.example.alcanzar.data.session.SessionManager
 import com.example.alcanzar.domain.usecase.GetUsuarioUseCase
 import com.example.alcanzar.domain.usecase.ObtenerViajesUseCase
 import com.example.alcanzar.domain.model.Usuario
+import com.example.alcanzar.domain.model.Viaje
 import com.example.alcanzar.presentation.statedata.PerfilUiState
+import java.text.SimpleDateFormat
+import java.util.*
 
 class PerfilViewModel(
     private val getUsuario: GetUsuarioUseCase,
@@ -56,13 +59,39 @@ class PerfilViewModel(
         obtenerViajes.execute { todosLosViajes ->
             val misViajes = todosLosViajes.filter { it.conductorId == userId }
             
-            val pendientes = misViajes.filter { it.estado == "EN_CURSO" }
-            val historial = misViajes.filter { it.estado == "FINALIZADO" }
+            val ahora = Calendar.getInstance().time
+
+            val (pendientes, historial) = misViajes.partition { viaje ->
+                esViajeFuturo(viaje, ahora)
+            }
             
             state = state.copy(
                 viajesPendientes = pendientes,
                 historialViajes = historial
             )
+        }
+    }
+
+    private fun esViajeFuturo(viaje: Viaje, ahora: Date): Boolean {
+        return try {
+            // Normalizamos AM/PM eliminando puntos y pasando a mayúsculas para mayor robustez
+            val horaNormalizada = viaje.horaSalida.replace(".", "").uppercase().trim()
+            val fechaHoraString = "${viaje.fecha} $horaNormalizada"
+            
+            // Intentamos primero con Locale.US para el AM/PM normalizado
+            val sdfUS = SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.US)
+            val fechaHoraViaje = sdfUS.parse(fechaHoraString)
+            fechaHoraViaje != null && fechaHoraViaje.after(ahora)
+        } catch (e: Exception) {
+            try {
+                // Si falla, intentamos con el Locale por defecto
+                val sdfDefault = SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.getDefault())
+                val fechaHoraViaje = sdfDefault.parse("${viaje.fecha} ${viaje.horaSalida}")
+                fechaHoraViaje != null && fechaHoraViaje.after(ahora)
+            } catch (e2: Exception) {
+                // En caso de error de parsing, si la fecha es hoy, lo dejamos pendiente por precaución
+                true
+            }
         }
     }
 }

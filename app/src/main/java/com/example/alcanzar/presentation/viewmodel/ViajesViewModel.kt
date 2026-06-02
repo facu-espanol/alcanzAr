@@ -6,6 +6,8 @@ import com.example.alcanzar.domain.usecase.ObtenerViajesUseCase
 import com.example.alcanzar.presentation.state.ViajesUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import java.text.SimpleDateFormat
+import java.util.*
 
 class ViajesViewModel(
     private val obtenerViajesUseCase: ObtenerViajesUseCase,
@@ -17,10 +19,21 @@ class ViajesViewModel(
 
     fun cargarViajes(currentUserId: String?) {
         obtenerViajesUseCase.execute { listaViajes ->
-            val listaFiltrada = if (currentUserId != null) {
-                listaViajes.filter { it.conductorId != currentUserId }
-            } else {
-                listaViajes
+            val fullSdf = SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.getDefault())
+            val ahora = Calendar.getInstance().time
+
+            val listaFiltrada = listaViajes.filter { viaje ->
+                val esDeOtro = currentUserId == null || viaje.conductorId != currentUserId
+                
+                val esFuturo = try {
+                    val fechaHoraString = "${viaje.fecha} ${viaje.horaSalida}"
+                    val fechaHoraViaje = fullSdf.parse(fechaHoraString)
+                    fechaHoraViaje != null && fechaHoraViaje.after(ahora)
+                } catch (e: Exception) {
+                    true
+                }
+                
+                esDeOtro && esFuturo
             }
 
             val conductorIds = listaFiltrada.map { it.conductorId }.distinct()
