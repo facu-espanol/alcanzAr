@@ -1,10 +1,6 @@
 package com.example.alcanzar.domain.model
 
-data class Usuario(
-    val id: String = "",
-    val nombre: String = "",
-    val password: String = "",
-
+data class ResumenCalificacionesUsuario(
     val promedioConductor: Double = 0.0,
     val promedioPasajero: Double = 0.0,
     val totalConductor: Int = 0,

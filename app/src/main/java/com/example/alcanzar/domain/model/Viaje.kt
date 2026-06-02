@@ -2,6 +2,7 @@ package com.example.alcanzar.domain.model
 
 data class Viaje(
     val id: String = "",
+    val conductorId: String = "",
     val paisOrigen: String = "",
     val ciudadOrigen: String = "",
     val paisDestino: String = "",
@@ -11,5 +12,6 @@ data class Viaje(
     val vehiculo: String = "",
     val plazas: Int = 0,
     val costoSugerido: Double = 0.0,
-    val idPasajeros: List<String> = emptyList()
+    val idPasajeros: List<String> = emptyList(),
+    val estado: String = "EN_CURSO" // EN_CURSO/FINALIZADO
 )
