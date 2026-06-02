@@ -6,11 +6,19 @@ class UserFirestoreDataSource(
     private val db: FirebaseFirestore
 ) {
 
-    fun crearUsuario(usuario: String, password: String, onResult: (String?) -> Unit) {
+    fun crearUsuario(
+        usuario: String, 
+        password: String, 
+        nombreCompleto: String,
+        fotoUrl: String,
+        onResult: (String?) -> Unit
+    ) {
         val data = hashMapOf(
             "usuario" to usuario,
             "password" to password,
-            "fecha" to System.currentTimeMillis()
+            "nombreCompleto" to nombreCompleto,
+            "fotoUrl" to fotoUrl,
+            "fechaRegistro" to System.currentTimeMillis()
         )
 
         db.collection("usuarios")

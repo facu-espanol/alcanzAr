@@ -11,7 +11,13 @@ class LoginRepositoryImpl(
         dataSource.login(usuario, password, onResult)
     }
 
-    override fun crearCuenta(usuario: String, password: String, onResult: (String?) -> Unit) {
-        dataSource.crearUsuario(usuario, password, onResult)
+    override fun crearCuenta(
+        usuario: String, 
+        password: String, 
+        nombreCompleto: String, 
+        fotoUrl: String, 
+        onResult: (String?) -> Unit
+    ) {
+        dataSource.crearUsuario(usuario, password, nombreCompleto, fotoUrl, onResult)
     }
 }

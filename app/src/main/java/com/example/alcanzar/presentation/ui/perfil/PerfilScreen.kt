@@ -85,7 +85,7 @@ fun PerfilScreen(
 
                     // Nombre del Usuario
                     Text(
-                        text = usuario?.nombre ?: "Usuario",
+                        text = usuario?.nombreCompleto ?: "Usuario",
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.ExtraBold,
                         color = MaterialTheme.colorScheme.onSurface
