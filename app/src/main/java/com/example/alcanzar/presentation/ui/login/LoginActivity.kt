@@ -2,6 +2,7 @@ package com.example.alcanzar.presentation.ui.login
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.example.alcanzar.data.LoginRepositoryImpl
@@ -43,6 +44,12 @@ class LoginActivity : ComponentActivity() {
                                 SessionManager.guardarUsuarioId(this, userId)
                                 startActivity(Intent(this, BienvenidaActivity::class.java))
                                 finish()
+                            } else {
+                                Toast.makeText(
+                                    this,
+                                    "Usuario o contraseña incorrectos",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         }
                     },

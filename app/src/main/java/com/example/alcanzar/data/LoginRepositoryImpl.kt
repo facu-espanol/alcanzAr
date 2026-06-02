@@ -1,6 +1,7 @@
 package com.example.alcanzar.data
 
 import com.example.alcanzar.data.datasource.UserFirestoreDataSource
+import com.example.alcanzar.domain.model.Usuario
 import com.example.alcanzar.domain.repository.LoginRepository
 
 class LoginRepositoryImpl(
@@ -19,5 +20,9 @@ class LoginRepositoryImpl(
         onResult: (String?) -> Unit
     ) {
         dataSource.crearUsuario(usuario, password, nombreCompleto, fotoUrl, onResult)
+    }
+
+    override fun obtenerUsuariosPorIds(ids: List<String>, onResult: (List<Usuario>) -> Unit) {
+        dataSource.obtenerUsuariosPorIds(ids, onResult)
     }
 }

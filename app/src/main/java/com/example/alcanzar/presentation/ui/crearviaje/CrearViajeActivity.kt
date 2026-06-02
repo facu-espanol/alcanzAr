@@ -18,6 +18,7 @@ import com.example.alcanzar.presentation.viewmodel.CrearViajeViewModel
 import com.example.alcanzar.ui.theme.AlcanzARTheme
 import android.util.Log
 import android.widget.Toast
+import com.example.alcanzar.data.session.SessionManager
 import com.example.alcanzar.presentation.ui.crearpeticion.CrearPeticionActivity
 
 class CrearViajeActivity : ComponentActivity() {
@@ -66,7 +67,10 @@ class CrearViajeActivity : ComponentActivity() {
                     },
 
                     onPublicarClick = { viaje ->
-                        vm.guardarViaje(viaje) { success ->
+                        val userId = SessionManager.obtenerUsuarioId(this) ?: ""
+                        val viajeConCreador = viaje.copy(conductorId = userId)
+                        
+                        vm.guardarViaje(viajeConCreador) { success ->
                             if (success) {
                                 Toast.makeText(
                                     this,

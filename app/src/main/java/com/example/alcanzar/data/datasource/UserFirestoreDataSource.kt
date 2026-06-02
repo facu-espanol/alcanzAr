@@ -1,5 +1,7 @@
 package com.example.alcanzar.data.datasource
 
+import com.example.alcanzar.domain.model.Usuario
+import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 
 class UserFirestoreDataSource(
@@ -41,6 +43,26 @@ class UserFirestoreDataSource(
             }
             .addOnFailureListener {
                 onResult(null)
+            }
+    }
+
+    fun obtenerUsuariosPorIds(ids: List<String>, onResult: (List<Usuario>) -> Unit) {
+        if (ids.isEmpty()) {
+            onResult(emptyList())
+            return
+        }
+
+        db.collection("usuarios")
+            .whereIn(FieldPath.documentId(), ids)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                val usuarios = querySnapshot.documents.mapNotNull { doc ->
+                    doc.toObject(Usuario::class.java)?.copy(id = doc.id)
+                }
+                onResult(usuarios)
+            }
+            .addOnFailureListener {
+                onResult(emptyList())
             }
     }
 }
