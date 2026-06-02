@@ -7,6 +7,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.example.alcanzar.data.PeticionRepositoryImpl
 import com.example.alcanzar.data.datasource.PeticionFirestoreDataSource
+import com.example.alcanzar.data.session.SessionManager
 import com.example.alcanzar.domain.usecase.GuardarPeticionUseCase
 import com.example.alcanzar.presentation.ui.acerca.AcercaActivity
 import com.example.alcanzar.presentation.ui.bienvenida.BienvenidaActivity
@@ -23,7 +24,8 @@ class CrearPeticionActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val dataSource = PeticionFirestoreDataSource(FirebaseFirestore.getInstance())
+        val db = FirebaseFirestore.getInstance()
+        val dataSource = PeticionFirestoreDataSource(db)
         val repository = PeticionRepositoryImpl(dataSource)
         val useCase = GuardarPeticionUseCase(repository)
         val vm = CrearPeticionViewModel(useCase)
@@ -65,7 +67,10 @@ class CrearPeticionActivity : ComponentActivity() {
                     },
 
                     onPublicarClick = { peticion ->
-                        vm.guardarPeticion(peticion) { success ->
+                        val userId = SessionManager.obtenerUsuarioId(this) ?: ""
+                        val peticionConCreador = peticion.copy(idCreador = userId)
+
+                        vm.guardarPeticion(peticionConCreador) { success ->
                             if (success) {
                                 Toast.makeText(
                                     this,

@@ -4,19 +4,32 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.example.alcanzar.data.session.SessionManager
 import com.example.alcanzar.domain.model.Peticion
+import com.example.alcanzar.domain.model.Usuario
+import com.example.alcanzar.domain.usecase.ObtenerUsuariosPorIdsUseCase
 import com.example.alcanzar.domain.usecase.PostularseAPeticionUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class DetallePeticionViewModel(
-    private val postularseAPeticionUseCase: PostularseAPeticionUseCase
+    private val postularseAPeticionUseCase: PostularseAPeticionUseCase,
+    private val obtenerUsuariosPorIdsUseCase: ObtenerUsuariosPorIdsUseCase
 ) : ViewModel() {
 
     private val _peticionState = MutableStateFlow<Peticion?>(null)
     val peticionState = _peticionState.asStateFlow()
 
+    private val _candidatos = MutableStateFlow<List<Usuario>>(emptyList())
+    val candidatos = _candidatos.asStateFlow()
+
     fun setPeticion(peticion: Peticion) {
         _peticionState.value = peticion
+        cargarCandidatos(peticion.idCandidatos)
+    }
+
+    private fun cargarCandidatos(ids: List<String>) {
+        obtenerUsuariosPorIdsUseCase(ids) { usuarios ->
+            _candidatos.value = usuarios
+        }
     }
 
     fun alternarPostulacion(context: Context, onResult: (Boolean) -> Unit) {
@@ -31,7 +44,9 @@ class DetallePeticionViewModel(
                 } else {
                     peticion.idCandidatos + userId
                 }
-                _peticionState.value = peticion.copy(idCandidatos = nuevaLista)
+                val peticionActualizada = peticion.copy(idCandidatos = nuevaLista)
+                _peticionState.value = peticionActualizada
+                cargarCandidatos(nuevaLista)
             }
             onResult(success)
         }
