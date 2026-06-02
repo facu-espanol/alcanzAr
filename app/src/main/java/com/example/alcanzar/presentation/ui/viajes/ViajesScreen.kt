@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.alcanzar.domain.model.Usuario
 import com.example.alcanzar.domain.model.Viaje
 import com.example.alcanzar.presentation.ui.components.AppDrawer
 import com.example.alcanzar.ui.theme.AlcanzarPrimary
@@ -23,15 +24,17 @@ import kotlinx.coroutines.launch
 @Composable
 fun ViajesScreen(
     viajes: List<Viaje>,
+    usuariosConductores: Map<String, Usuario> = emptyMap(),
     onRefresh: () -> Unit,
     onViajeClick: (Viaje) -> Unit,
-    onConductorClick: (String) -> Unit, // Nuevo callback
+    onConductorClick: (String) -> Unit,
     onPerfilClick: () -> Unit,
     onInicioClick: () -> Unit,
     onPeticionesClick: () -> Unit,
     onAcercaClick: () -> Unit,
     onCrearViajeClick: () -> Unit,
-    onCrearPeticionClick: () -> Unit
+    onCrearPeticionClick: () -> Unit,
+    onCerrarSesionClick: () -> Unit = {}
 ) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -48,6 +51,8 @@ fun ViajesScreen(
                 onAcercaClick = { scope.launch { drawerState.close(); onAcercaClick() } },
                 onCrearViajeClick = { scope.launch { drawerState.close(); onCrearViajeClick() } },
                 onCrearPeticionClick = { scope.launch { drawerState.close(); onCrearPeticionClick() } },
+                onMiPerfilClick = { scope.launch { drawerState.close(); onPerfilClick() } },
+                onCerrarSesionClick = { scope.launch { drawerState.close(); onCerrarSesionClick() } }
             )
         }
     ) {
@@ -101,6 +106,7 @@ fun ViajesScreen(
                         items(viajes) { viaje ->
                             ViajeCard(
                                 viaje = viaje,
+                                conductor = usuariosConductores[viaje.conductorId],
                                 onClick = { onViajeClick(viaje) },
                                 onConductorClick = onConductorClick
                             )

@@ -1,7 +1,7 @@
 package com.example.alcanzar.presentation.ui.perfil
 
+import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.lifecycle.ViewModel
@@ -12,11 +12,12 @@ import com.example.alcanzar.data.datasource.ViajeFirestoreDataSource
 import com.example.alcanzar.data.repository.UsuarioRepositoryImpl
 import com.example.alcanzar.domain.usecase.GetUsuarioUseCase
 import com.example.alcanzar.domain.usecase.ObtenerViajesUseCase
+import com.example.alcanzar.presentation.ui.bienvenida.BienvenidaActivity
 import com.example.alcanzar.presentation.viewmodel.PerfilViewModel
 import com.example.alcanzar.ui.theme.AlcanzARTheme
 import com.google.firebase.firestore.FirebaseFirestore
 
-class PerfilActivity : ComponentActivity() {
+class SesionActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,14 +30,6 @@ class PerfilActivity : ComponentActivity() {
         val viajeRepository = ViajeRepositoryImpl(viajeDataSource)
         val obtenerViajesUseCase = ObtenerViajesUseCase(viajeRepository)
 
-        val targetUserId = intent.getStringExtra("USER_ID")
-
-        if (targetUserId == null) {
-            Toast.makeText(this, "Usuario no encontrado", Toast.LENGTH_SHORT).show()
-            finish()
-            return
-        }
-
         setContent {
             AlcanzARTheme {
                 val viewModel: PerfilViewModel = viewModel(
@@ -48,10 +41,15 @@ class PerfilActivity : ComponentActivity() {
                     }
                 )
 
-                PerfilScreen(
+                SesionScreen(
                     viewModel = viewModel,
-                    targetUserId = targetUserId,
-                    onBack = { finish() }
+                    onBack = { finish() },
+                    onLogout = {
+                        val intent = Intent(this, BienvenidaActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        startActivity(intent)
+                        finish()
+                    }
                 )
             }
         }

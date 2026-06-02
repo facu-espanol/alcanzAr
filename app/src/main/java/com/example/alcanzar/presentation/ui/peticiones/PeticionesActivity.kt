@@ -9,12 +9,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import com.example.alcanzar.data.PeticionRepositoryImpl
 import com.example.alcanzar.data.datasource.PeticionFirestoreDataSource
+import com.example.alcanzar.data.session.SessionManager
 import com.example.alcanzar.domain.usecase.ObtenerPeticionesUseCase
 import com.example.alcanzar.presentation.ui.acerca.AcercaActivity
 import com.example.alcanzar.presentation.ui.bienvenida.BienvenidaActivity
 import com.example.alcanzar.presentation.ui.crearpeticion.CrearPeticionActivity
 import com.example.alcanzar.presentation.ui.crearviaje.CrearViajeActivity
 import com.example.alcanzar.presentation.ui.detallepeticion.DetallePeticionActivity
+import com.example.alcanzar.presentation.ui.login.LoginActivity
 import com.example.alcanzar.presentation.ui.perfil.PerfilActivity
 import com.example.alcanzar.presentation.ui.viajes.ViajesActivity
 import com.example.alcanzar.presentation.viewmodel.PeticionesViewModel
@@ -86,6 +88,13 @@ class PeticionesActivity : ComponentActivity() {
                                 CrearPeticionActivity::class.java
                             )
                         )
+                    },
+                    onCerrarSesionClick = {
+                        SessionManager.cerrarSesion(this)
+                        val intent = Intent(this, LoginActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        startActivity(intent)
+                        finish()
                     }
                 )
             }

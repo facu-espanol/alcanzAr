@@ -7,13 +7,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.alcanzar.domain.model.Peticion
@@ -32,8 +30,9 @@ fun PeticionesScreen(
     onAcercaClick: () -> Unit,
     onViajesClick: () -> Unit,
     onCrearViajeClick: () -> Unit,
-    onCrearPeticionClick: () -> Unit
-    ) {
+    onCrearPeticionClick: () -> Unit,
+    onCerrarSesionClick: () -> Unit = {}
+) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     var isRefreshing by remember { mutableStateOf(false) }
@@ -82,6 +81,18 @@ fun PeticionesScreen(
                     scope.launch {
                         drawerState.close()
                         onCrearPeticionClick()
+                    }
+                },
+                onMiPerfilClick = {
+                    scope.launch {
+                        drawerState.close()
+                        onPerfilClick()
+                    }
+                },
+                onCerrarSesionClick = {
+                    scope.launch {
+                        drawerState.close()
+                        onCerrarSesionClick()
                     }
                 }
             )
@@ -152,29 +163,29 @@ fun PeticionesScreen(
                         )
                 )
 
-            PullToRefreshBox(
-                state = pullToRefreshState,
-                isRefreshing = isRefreshing,
-                onRefresh = {
-                    scope.launch {
-                        isRefreshing = true
-                        onRefresh()
-                        delay(1000) // Solamente muestra el icono de la flechita cargando este tiempo
-                        isRefreshing = false
-                    }
-                },
-                modifier = Modifier.fillMaxSize()
-            ) {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(14.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                PullToRefreshBox(
+                    state = pullToRefreshState,
+                    isRefreshing = isRefreshing,
+                    onRefresh = {
+                        scope.launch {
+                            isRefreshing = true
+                            onRefresh()
+                            delay(1000)
+                            isRefreshing = false
+                        }
+                    },
+                    modifier = Modifier.fillMaxSize()
                 ) {
-                    items(peticiones) {
-                        PeticionCard(it, onClick = { onPeticionClick(it) })
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(14.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        items(peticiones) {
+                            PeticionCard(it, onClick = { onPeticionClick(it) })
+                        }
                     }
                 }
-            }
             }
         }
     }

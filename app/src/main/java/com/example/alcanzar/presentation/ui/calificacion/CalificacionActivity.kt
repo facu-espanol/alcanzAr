@@ -45,7 +45,6 @@ class CalificacionActivity : ComponentActivity() {
     private fun createStagingViaje(miId: String) = Viaje(
         id = "staging_id",
         conductorId = "admin_user",
-        conductorNombre = "Facundo (Admin)",
         ciudadOrigen = "Staging",
         ciudadDestino = "Prueba de Estética",
         idPasajeros = listOf(miId)

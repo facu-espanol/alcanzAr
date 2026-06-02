@@ -45,6 +45,9 @@
             android:name=".presentation.ui.perfil.PerfilActivity"
             android:exported="false" />
         <activity
+            android:name=".presentation.ui.perfil.SesionActivity"
+            android:exported="false" />
+        <activity
             android:name=".presentation.ui.notificaciones.NotificacionesActivity"
             android:exported="false" />
         <activity

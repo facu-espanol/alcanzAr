@@ -1,9 +1,10 @@
 package com.example.alcanzar.domain.model
 
+import java.io.Serializable
+
 data class Viaje(
     val id: String = "",
     val conductorId: String = "",
-    val conductorNombre: String = "", // Agregado para mostrar en el listado
     val paisOrigen: String = "",
     val ciudadOrigen: String = "",
     val paisDestino: String = "",
@@ -15,4 +16,4 @@ data class Viaje(
     val costoSugerido: Double = 0.0,
     val idPasajeros: List<String> = emptyList(),
     val estado: String = "EN_CURSO" // EN_CURSO/FINALIZADO
-)
+) : Serializable

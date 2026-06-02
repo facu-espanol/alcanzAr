@@ -1,3 +1,5 @@
+package com.example.alcanzar.presentation.ui.crearviaje
+
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -30,7 +32,8 @@ fun CrearViajeScreen(
     onViajesClick: () -> Unit,
     onAcercaClick: () -> Unit,
     onPublicarClick: (Viaje) -> Unit,
-    onCrearPeticionClick: () -> Unit
+    onCrearPeticionClick: () -> Unit,
+    onNotificacionesClick: () -> Unit
 ) {
     val context = LocalContext.current
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -138,6 +141,18 @@ fun CrearViajeScreen(
                     scope.launch {
                         drawerState.close()
                         onCrearPeticionClick()
+                    }
+                },
+                onMiPerfilClick = {
+                    scope.launch {
+                        drawerState.close()
+                        onPerfilClick()
+                    }
+                },
+                onNotificacionesClick = {
+                    scope.launch {
+                        drawerState.close()
+                        onNotificacionesClick()
                     }
                 }
             )

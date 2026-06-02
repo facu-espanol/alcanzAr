@@ -7,6 +7,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Chat
+import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -28,7 +29,9 @@ fun AppDrawer(
     onAcercaClick: () -> Unit,
     onCrearViajeClick: () -> Unit,
     onCrearPeticionClick: () -> Unit,
-    onNotificacionesClick: () -> Unit = {}
+    onMiPerfilClick: () -> Unit,
+    onNotificacionesClick: () -> Unit = {},
+    onCerrarSesionClick: () -> Unit = {}
 ) {
 
     ModalDrawerSheet(
@@ -43,6 +46,18 @@ fun AppDrawer(
 
             Spacer(
                 modifier = Modifier.height(12.dp)
+            )
+
+            DrawerSectionTitle("MI CUENTA")
+
+            DrawerItem(
+                icon = Icons.Default.Person,
+                text = "Mi Perfil",
+                onClick = onMiPerfilClick
+            )
+
+            HorizontalDivider(
+                modifier = Modifier.padding(vertical = 8.dp)
             )
 
             DrawerSectionTitle("GENERAL")
@@ -117,6 +132,16 @@ fun AppDrawer(
                 icon = Icons.Default.Info,
                 text = "Acerca de",
                 onClick = onAcercaClick
+            )
+
+            HorizontalDivider(
+                modifier = Modifier.padding(vertical = 12.dp)
+            )
+
+            DrawerItem(
+                icon = Icons.AutoMirrored.Filled.Logout,
+                text = "Cerrar sesión",
+                onClick = onCerrarSesionClick
             )
             
             // Espacio extra al final para que la barra del sistema no tape el último item

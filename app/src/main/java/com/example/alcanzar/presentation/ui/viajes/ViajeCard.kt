@@ -4,7 +4,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.DirectionsBike
 import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material3.*
@@ -14,13 +13,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.alcanzar.domain.model.Usuario
 import com.example.alcanzar.domain.model.Viaje
+import com.example.alcanzar.presentation.ui.components.UserAvatar
 import com.example.alcanzar.ui.theme.AlcanzarPrimary
 import com.example.alcanzar.ui.theme.AlcanzarTextSecondary
 
 @Composable
 fun ViajeCard(
     viaje: Viaje,
+    conductor: Usuario? = null,
     onClick: () -> Unit,
     onConductorClick: (String) -> Unit
 ) {
@@ -55,15 +57,13 @@ fun ViajeCard(
                         .padding(vertical = 4.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.AccountCircle,
-                        contentDescription = null,
-                        modifier = Modifier.size(20.dp),
-                        tint = AlcanzarPrimary
+                    UserAvatar(
+                        fotoUrl = conductor?.fotoUrl,
+                        modifier = Modifier.size(24.dp)
                     )
-                    Spacer(modifier = Modifier.width(4.dp))
+                    Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = viaje.conductorNombre.ifBlank { "Conductor" },
+                        text = conductor?.nombreCompleto ?: "Cargando...",
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium,
                         color = AlcanzarPrimary

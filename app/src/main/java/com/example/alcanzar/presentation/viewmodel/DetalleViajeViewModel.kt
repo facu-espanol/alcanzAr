@@ -27,9 +27,19 @@ class DetalleViajeViewModel(
     private val _usuariosInscriptos = MutableStateFlow<List<Usuario>>(emptyList())
     val usuariosInscriptos = _usuariosInscriptos.asStateFlow()
 
+    private val _conductor = MutableStateFlow<Usuario?>(null)
+    val conductor = _conductor.asStateFlow()
+
     fun setViaje(viaje: Viaje) {
         _viajeState.value = viaje
         cargarUsuariosInscriptos(viaje.idPasajeros)
+        cargarConductor(viaje.conductorId)
+    }
+
+    private fun cargarConductor(conductorId: String) {
+        obtenerUsuariosPorIdsUseCase(listOf(conductorId)) { usuarios ->
+            _conductor.value = usuarios.firstOrNull()
+        }
     }
 
     private fun cargarUsuariosInscriptos(ids: List<String>) {

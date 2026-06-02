@@ -76,6 +76,12 @@ fun NotificacionesScreen(
                         onCrearPeticionClick()
                     }
                 },
+                onMiPerfilClick = {
+                    scope.launch {
+                        drawerState.close()
+                        onPerfilClick()
+                    }
+                },
                 onNotificacionesClick = {
                     scope.launch { drawerState.close() }
                 }

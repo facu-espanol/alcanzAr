@@ -9,7 +9,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material.icons.filled.Person
@@ -27,7 +26,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.alcanzar.data.session.SessionManager
 import com.example.alcanzar.presentation.viewmodel.PerfilViewModel
 import com.example.alcanzar.ui.theme.*
 import java.util.Locale
@@ -36,14 +34,11 @@ import java.util.Locale
 @Composable
 fun PerfilScreen(
     viewModel: PerfilViewModel,
-    targetUserId: String? = null,
-    onBack: (() -> Unit)? = null,
-    onLogout: (() -> Unit)? = null // Callback de cierre de sesión
+    targetUserId: String,
+    onBack: () -> Unit
 ) {
     val context = LocalContext.current
     val state = viewModel.state
-    val miId = SessionManager.obtenerUsuarioId(context)
-    val esMiPerfil = targetUserId == null || targetUserId == miId
 
     LaunchedEffect(targetUserId) {
         viewModel.cargarPerfil(context, targetUserId)
@@ -54,16 +49,14 @@ fun PerfilScreen(
             CenterAlignedTopAppBar(
                 title = { 
                     Text(
-                        if (esMiPerfil) "Mi Perfil" else "Perfil de Usuario", 
+                        "Perfil de Usuario", 
                         fontWeight = FontWeight.Bold, 
                         color = Color.White 
                     ) 
                 },
                 navigationIcon = {
-                    if (onBack != null) {
-                        IconButton(onClick = onBack) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = Color.White)
-                        }
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = Color.White)
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
@@ -83,7 +76,9 @@ fun PerfilScreen(
             } else {
                 val usuario = state.usuario
                 Column(
-                    modifier = Modifier.fillMaxSize().padding(24.dp),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     // Avatar
@@ -112,27 +107,17 @@ fun PerfilScreen(
                     Text(text = usuario?.nombreCompleto ?: "Usuario", fontSize = 26.sp, fontWeight = FontWeight.ExtraBold, color = AlcanzarTextPrimary)
 
                     Spacer(modifier = Modifier.height(32.dp))
+                    
+                    Text(
+                        text = "Reputación en la comunidad",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = AlcanzarTextSecondary,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                         RatingCard("Conductor", Icons.Default.DirectionsCar, usuario?.promedioConductor ?: 0.0, usuario?.totalConductor ?: 0, Modifier.weight(1f))
                         RatingCard("Pasajero", Icons.Default.Person, usuario?.promedioPasajero ?: 0.0, usuario?.totalPasajero ?: 0, Modifier.weight(1f))
-                    }
-
-                    Spacer(modifier = Modifier.weight(1f))
-
-                    if (esMiPerfil) {
-                        Button(
-                            onClick = {
-                                SessionManager.cerrarSesion(context)
-                                onLogout?.invoke()
-                            },
-                            modifier = Modifier.fillMaxWidth().height(56.dp),
-                            shape = RoundedCornerShape(16.dp),
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD32F2F))
-                        ) {
-                            Icon(Icons.AutoMirrored.Filled.Logout, null)
-                            Spacer(Modifier.width(8.dp))
-                            Text("Cerrar Sesión", fontWeight = FontWeight.Bold)
-                        }
                     }
                 }
             }

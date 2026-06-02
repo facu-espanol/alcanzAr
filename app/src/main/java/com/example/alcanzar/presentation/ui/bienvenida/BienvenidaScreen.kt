@@ -22,7 +22,8 @@ fun BienvenidaScreen(
     onViajesClick: () -> Unit,
     onCrearViajeClick: () -> Unit,
     onCrearPeticionClick: () -> Unit,
-    onNotificacionesClick: () -> Unit
+    onNotificacionesClick: () -> Unit,
+    onCerrarSesionClick: () -> Unit = {}
 ) {
     val drawerState =
         rememberDrawerState(
@@ -79,10 +80,22 @@ fun BienvenidaScreen(
                         onCrearPeticionClick()
                     }
                 },
+                onMiPerfilClick = {
+                    scope.launch {
+                        drawerState.close()
+                        onPerfilClick()
+                    }
+                },
                 onNotificacionesClick = {
                     scope.launch {
                         drawerState.close()
                         onNotificacionesClick()
+                    }
+                },
+                onCerrarSesionClick = {
+                    scope.launch {
+                        drawerState.close()
+                        onCerrarSesionClick()
                     }
                 }
 
