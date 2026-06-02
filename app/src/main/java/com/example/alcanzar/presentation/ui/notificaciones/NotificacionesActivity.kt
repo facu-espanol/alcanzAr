@@ -8,6 +8,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import com.example.alcanzar.data.NotificacionRepositoryImpl
+import com.example.alcanzar.domain.usecase.EliminarNotificacionUseCase
 import com.example.alcanzar.domain.usecase.ObtenerNotificacionDetalleUseCase
 import com.example.alcanzar.domain.usecase.ObtenerNotificacionesUseCase
 import com.example.alcanzar.presentation.ui.acerca.AcercaActivity
@@ -27,11 +28,16 @@ class NotificacionesActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Inicialización manual para este ejemplo de Clean Architecture sin DI
         val repository = NotificacionRepositoryImpl()
         val obtenerNotificacionesUseCase = ObtenerNotificacionesUseCase(repository)
         val obtenerNotificacionDetalleUseCase = ObtenerNotificacionDetalleUseCase(repository)
-        viewModel = NotificacionesViewModel(obtenerNotificacionesUseCase, obtenerNotificacionDetalleUseCase)
+        val eliminarNotificacionUseCase = EliminarNotificacionUseCase(repository)
+        
+        viewModel = NotificacionesViewModel(
+            obtenerNotificacionesUseCase, 
+            obtenerNotificacionDetalleUseCase,
+            eliminarNotificacionUseCase
+        )
 
         setContent {
             AlcanzARTheme {
@@ -48,6 +54,9 @@ class NotificacionesActivity : ComponentActivity() {
                             putExtra("NOTIFICACION_ID", notificacion.id)
                         }
                         startActivity(intent)
+                    },
+                    onDeleteNotificacion = { id ->
+                        viewModel.eliminarNotificacion(id)
                     },
                     onPerfilClick = { startActivity(Intent(this, PerfilActivity::class.java)) },
                     onInicioClick = {

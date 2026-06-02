@@ -35,4 +35,12 @@ class ViajeFirestoreDataSource(
             .addOnSuccessListener { onResult(true) }
             .addOnFailureListener { onResult(false) }
     }
+    fun obtenerViajePorId(id: String, onResult: (Viaje?) -> Unit) {
+        db.collection("viajes").document(id)
+            .get()
+            .addOnSuccessListener { doc ->
+                onResult(doc.toObject(Viaje::class.java)?.copy(id = doc.id))
+            }
+            .addOnFailureListener { onResult(null) }
+    }
 }

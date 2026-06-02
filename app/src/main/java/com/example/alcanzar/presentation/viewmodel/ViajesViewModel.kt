@@ -10,15 +10,22 @@ class ViajesViewModel(
     private val obtenerViajesUseCase: ObtenerViajesUseCase
 ) : ViewModel() {
 
-    private val _uiState =
-        MutableStateFlow(ViajesUiState())
-
-    val uiState =
-        _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(ViajesUiState())
+    val uiState = _uiState.asStateFlow()
 
     fun cargarViajes() {
+        // En ViajesViewModel.kt -> cargarViajes()
         obtenerViajesUseCase.execute { lista ->
-            _uiState.value = ViajesUiState(viajes = lista)
+            // Ya no hardcodeamos nombres. Si viene de la DB se usa,
+            // y si no, ponemos un aviso de "Nombre no disponible"
+            val listaLimpia = lista.map { viaje ->
+                if (viaje.conductorNombre.isBlank()) {
+                    viaje.copy(conductorNombre = "Usuario AlcanzAR")
+                } else {
+                    viaje
+                }
+            }
+            _uiState.value = ViajesUiState(viajes = listaLimpia)
         }
     }
 }

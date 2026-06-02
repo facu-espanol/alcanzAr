@@ -4,6 +4,7 @@ import com.example.alcanzar.domain.model.Viaje
 
 interface ViajeRepository {
     fun obtenerViajes(onResult: (List<Viaje>) -> Unit)
+    fun obtenerViajePorId(id: String, onResult: (Viaje?) -> Unit) // Nueva función
     fun guardarViaje(viaje: Viaje, onResult: (Boolean) -> Unit)
     fun participarEnViaje(viajeId: String, userId: String, participar: Boolean, onResult: (Boolean) -> Unit)
 }

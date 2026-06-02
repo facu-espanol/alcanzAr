@@ -6,16 +6,16 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.*
-import androidx.compose.ui.*
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.*
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.alcanzar.domain.model.Viaje
 import com.example.alcanzar.presentation.ui.components.AppDrawer
+import com.example.alcanzar.ui.theme.AlcanzarPrimary
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -25,6 +25,7 @@ fun ViajesScreen(
     viajes: List<Viaje>,
     onRefresh: () -> Unit,
     onViajeClick: (Viaje) -> Unit,
+    onConductorClick: (String) -> Unit, // Nuevo callback
     onPerfilClick: () -> Unit,
     onInicioClick: () -> Unit,
     onPeticionesClick: () -> Unit,
@@ -39,143 +40,73 @@ fun ViajesScreen(
 
     ModalNavigationDrawer(
         drawerState = drawerState,
-
         drawerContent = {
-
             AppDrawer(
-
-                onInicioClick = {
-                    scope.launch {
-                        drawerState.close()
-                        onInicioClick()
-                    }
-                },
-
-                onPeticionesClick = {
-                    scope.launch {
-                        drawerState.close()
-                        onPeticionesClick()
-                    }
-                },
-
-                onViajesClick = {
-                    scope.launch {
-                        drawerState.close()
-                    }
-                },
-
-                onAcercaClick = {
-                    scope.launch {
-                        drawerState.close()
-                        onAcercaClick()
-                    }
-                },
-
-                onCrearViajeClick = {
-                    scope.launch {
-                        drawerState.close()
-                        onCrearViajeClick()
-                    }
-                },
-
-                onCrearPeticionClick = {
-                    scope.launch {
-                        drawerState.close()
-                        onCrearPeticionClick()
-                    }
-                },
+                onInicioClick = { scope.launch { drawerState.close(); onInicioClick() } },
+                onPeticionesClick = { scope.launch { drawerState.close(); onPeticionesClick() } },
+                onViajesClick = { scope.launch { drawerState.close() } },
+                onAcercaClick = { scope.launch { drawerState.close(); onAcercaClick() } },
+                onCrearViajeClick = { scope.launch { drawerState.close(); onCrearViajeClick() } },
+                onCrearPeticionClick = { scope.launch { drawerState.close(); onCrearPeticionClick() } },
             )
         }
     ) {
-
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = {
-                        Text(
-                            "AlcanzAR",
-                            color = Color.White
-                        )
-                    },
-
+                    title = { Text("AlcanzAR", color = Color.White) },
                     navigationIcon = {
-                        IconButton(
-                            onClick = {
-                                scope.launch {
-                                    drawerState.open()
-                                }
-                            }
-                        ) {
-                            Icon(
-                                Icons.Default.Menu,
-                                null,
-                                tint = Color.White
-                            )
+                        IconButton(onClick = { scope.launch { drawerState.open() } }) {
+                            Icon(Icons.Default.Menu, null, tint = Color.White)
                         }
                     },
-
                     actions = {
-                        IconButton(
-                            onClick = onPerfilClick
-                        ) {
-                            Icon(
-                                Icons.Default.Person,
-                                null,
-                                tint = Color.White
-                            )
+                        IconButton(onClick = onPerfilClick) {
+                            Icon(Icons.Default.Person, null, tint = Color.White)
                         }
                     },
-
-                    colors =
-                        TopAppBarDefaults.topAppBarColors(
-                            containerColor =
-                                Color(0xFF1976D2)
-                        )
+                    colors = TopAppBarDefaults.topAppBarColors(containerColor = AlcanzarPrimary)
                 )
             }
         ) { padding ->
-
             Column(
-                modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .padding(padding)
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
             ) {
-
                 Text(
                     text = "Viajes cercanos",
                     fontSize = 22.sp,
-                    modifier =
-                        Modifier.padding(
-                            start = 18.dp,
-                            top = 20.dp,
-                            bottom = 12.dp
-                        )
+                    modifier = Modifier.padding(start = 18.dp, top = 20.dp, bottom = 12.dp)
                 )
 
-            PullToRefreshBox(
-                state = pullToRefreshState,
-                isRefreshing = isRefreshing,
-                onRefresh = {
-                    scope.launch {
-                        isRefreshing = true
-                        onRefresh()
-                        delay(1000) // Solamente muestra el icono de la flechita cargando este tiempo
-                        isRefreshing = false
-                    }
-                },
-                modifier = Modifier.fillMaxSize()
-            ) {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(14.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                PullToRefreshBox(
+                    state = pullToRefreshState,
+                    isRefreshing = isRefreshing,
+                    onRefresh = {
+                        scope.launch {
+                            isRefreshing = true
+                            onRefresh()
+                            delay(1000)
+                            isRefreshing = false
+                        }
+                    },
+                    modifier = Modifier.fillMaxSize()
                 ) {
-                    items(viajes) {
-                        ViajeCard(it, onClick = { onViajeClick(it) })
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(14.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        items(viajes) { viaje ->
+                            ViajeCard(
+                                viaje = viaje,
+                                onClick = { onViajeClick(viaje) },
+                                onConductorClick = onConductorClick
+                            )
+                        }
                     }
                 }
-            }
             }
         }
     }

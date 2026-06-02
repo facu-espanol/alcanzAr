@@ -3,6 +3,7 @@ package com.example.alcanzar.domain.model
 data class Viaje(
     val id: String = "",
     val conductorId: String = "",
+    val conductorNombre: String = "", // Agregado para mostrar en el listado
     val paisOrigen: String = "",
     val ciudadOrigen: String = "",
     val paisDestino: String = "",

@@ -1,41 +1,32 @@
 package com.example.alcanzar.presentation.ui.detalleviaje
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Chat
-import androidx.compose.material.icons.filled.DirectionsCar
-import androidx.compose.material.icons.filled.Event
-import androidx.compose.material.icons.filled.Group
-import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Payments
-import androidx.compose.material.icons.filled.Schedule
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.rememberAsyncImagePainter
 import com.example.alcanzar.data.LoginRepositoryImpl
 import com.example.alcanzar.data.ViajeRepositoryImpl
 import com.example.alcanzar.data.datasource.UserFirestoreDataSource
@@ -47,9 +38,11 @@ import com.example.alcanzar.domain.usecase.ObtenerUsuariosPorIdsUseCase
 import com.example.alcanzar.domain.usecase.ParticiparEnViajeUseCase
 import com.example.alcanzar.presentation.ui.components.DetailItem
 import com.example.alcanzar.presentation.ui.components.UserAvatar
+import com.example.alcanzar.presentation.ui.perfil.PerfilActivity
 import com.example.alcanzar.presentation.viewmodel.DetalleViajeViewModel
 import com.example.alcanzar.presentation.viewmodel.ParticipacionResult
 import com.example.alcanzar.ui.theme.AlcanzARTheme
+import com.example.alcanzar.ui.theme.AlcanzarPrimary
 import com.google.firebase.firestore.FirebaseFirestore
 
 class DetalleViajeActivity : ComponentActivity() {
@@ -130,7 +123,7 @@ fun DetalleViajeContent(
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, "Volver", tint = Color.White)
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFF1976D2))
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = AlcanzarPrimary)
             )
         }
     ) { padding ->
@@ -141,19 +134,23 @@ fun DetalleViajeContent(
                 .verticalScroll(rememberScrollState())
                 .padding(20.dp)
         ) {
+            // Card Principal de Información
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
+                shape = RoundedCornerShape(24.dp),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
             ) {
-                Column(modifier = Modifier.padding(16.dp)) {
+                Column(modifier = Modifier.padding(20.dp)) {
                     DetailItem(Icons.Default.LocationOn, "Origen", "${viaje.ciudadOrigen}, ${viaje.paisOrigen}")
                     DetailItem(Icons.Default.LocationOn, "Destino", "${viaje.ciudadDestino}, ${viaje.paisDestino}")
-                    HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp))
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp), thickness = 0.5.dp)
+                    
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                         DetailItem(Icons.Default.Event, "Fecha", viaje.fecha, Modifier.weight(1f))
                         DetailItem(Icons.Default.Schedule, "Hora", viaje.horaSalida, Modifier.weight(1f))
                     }
+                    
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                         DetailItem(Icons.Default.DirectionsCar, "Vehículo", viaje.vehiculo, Modifier.weight(1f))
                         DetailItem(Icons.Default.Group, "Plazas", "${viaje.plazas}", Modifier.weight(1f))
@@ -164,12 +161,66 @@ fun DetalleViajeContent(
 
             Spacer(modifier = Modifier.height(24.dp))
 
+            // Sección del Conductor
+            Text(
+                text = "Conductor",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = AlcanzarPrimary
+            )
+            
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        val intent = Intent(context, PerfilActivity::class.java).apply {
+                            putExtra("USER_ID", viaje.conductorId)
+                        }
+                        context.startActivity(intent)
+                    },
+                shape = RoundedCornerShape(20.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = AlcanzarPrimary.copy(alpha = 0.08f)
+                )
+            ) {
+                Row(
+                    modifier = Modifier.padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    UserAvatar(fotoUrl = "", modifier = Modifier.size(50.dp))
+                    Spacer(Modifier.width(16.dp))
+                    Column {
+                        Text(
+                            text = viaje.conductorNombre.ifBlank { "Conductor Verificado" },
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 17.sp,
+                            color = AlcanzarPrimary
+                        )
+                        Text(
+                            text = "Toca para ver perfil y reputación",
+                            fontSize = 12.sp,
+                            color = AlcanzarPrimary.copy(alpha = 0.7f)
+                        )
+                    }
+                    Spacer(modifier = Modifier.weight(1f))
+                    Icon(
+                        imageVector = Icons.Default.ChevronRight,
+                        contentDescription = null,
+                        tint = AlcanzarPrimary
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
             // Sección de Inscriptos / Pasajeros
             Text(
                 text = "Pasajeros inscriptos",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary
+                color = AlcanzarPrimary
             )
             
             Spacer(modifier = Modifier.height(12.dp))
@@ -183,7 +234,15 @@ fun DetalleViajeContent(
                         contentPadding = PaddingValues(horizontal = 4.dp)
                     ) {
                         items(inscriptos) { usuario ->
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier.clickable {
+                                    val intent = Intent(context, PerfilActivity::class.java).apply {
+                                        putExtra("USER_ID", usuario.id)
+                                    }
+                                    context.startActivity(intent)
+                                }
+                            ) {
                                 UserAvatar(fotoUrl = usuario.fotoUrl)
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Text(
@@ -201,19 +260,24 @@ fun DetalleViajeContent(
                 }
             } else {
                 Surface(
-                    color = if (estaLleno) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.primaryContainer,
+                    color = if (estaLleno) MaterialTheme.colorScheme.errorContainer else AlcanzarPrimary.copy(alpha = 0.1f),
                     shape = RoundedCornerShape(12.dp)
                 ) {
                     Row(
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(Icons.Default.Group, null, modifier = Modifier.size(20.dp))
+                        Icon(
+                            Icons.Default.Group, 
+                            null, 
+                            modifier = Modifier.size(20.dp),
+                            tint = if (estaLleno) MaterialTheme.colorScheme.error else AlcanzarPrimary
+                        )
                         Spacer(Modifier.width(8.dp))
                         Text(
                             text = if (estaLleno) "Viaje completo" else "${viaje.idPasajeros.size}/${viaje.plazas} personas anotadas",
                             fontWeight = FontWeight.Bold,
-                            color = if (estaLleno) MaterialTheme.colorScheme.onErrorContainer else MaterialTheme.colorScheme.onPrimaryContainer
+                            color = if (estaLleno) MaterialTheme.colorScheme.error else AlcanzarPrimary
                         )
                     }
                 }
@@ -221,6 +285,7 @@ fun DetalleViajeContent(
 
             Spacer(modifier = Modifier.height(32.dp))
 
+            // Botón de Acción
             if (!esCreador) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -229,7 +294,7 @@ fun DetalleViajeContent(
                 ) {
                     Button(
                         onClick = onParticipar,
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.weight(1f).height(56.dp),
                         enabled = yaParticipa || !estaLleno,
                         colors = if (yaParticipa) 
                             ButtonDefaults.buttonColors(containerColor = Color.Gray) 
@@ -237,7 +302,7 @@ fun DetalleViajeContent(
                             ButtonDefaults.buttonColors(containerColor = Color.LightGray)
                         else
                             ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)),
-                        shape = MaterialTheme.shapes.medium
+                        shape = RoundedCornerShape(16.dp)
                     ) {
                         Text(
                             text = when {
@@ -245,16 +310,18 @@ fun DetalleViajeContent(
                                 estaLleno -> "VIAJE COMPLETO"
                                 else -> "SUMARSE AL VIAJE"
                             },
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp
                         )
                     }
 
                     if (yaParticipa) {
                         FloatingActionButton(
-                            onClick = { /* Chat */ },
-                            containerColor = Color(0xFF1976D2),
+                            onClick = { /* Chat logic */ },
+                            containerColor = AlcanzarPrimary,
                             contentColor = Color.White,
-                            modifier = Modifier.size(56.dp)
+                            modifier = Modifier.size(56.dp),
+                            shape = RoundedCornerShape(16.dp)
                         ) {
                             Icon(Icons.AutoMirrored.Filled.Chat, "Chat")
                         }
@@ -266,7 +333,8 @@ fun DetalleViajeContent(
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = androidx.compose.ui.text.style.TextAlign.Center,
                     color = Color.Gray,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 15.sp
                 )
             }
         }

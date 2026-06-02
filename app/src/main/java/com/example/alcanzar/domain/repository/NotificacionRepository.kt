@@ -6,4 +6,5 @@ import kotlinx.coroutines.flow.Flow
 interface NotificacionRepository {
     fun getNotificaciones(): Flow<List<Notificacion>>
     fun getNotificacionById(id: String): Flow<Notificacion?>
+    fun eliminarNotificacion(id: String)
 }

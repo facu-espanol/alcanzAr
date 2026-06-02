@@ -19,4 +19,7 @@ class ViajeRepositoryImpl(
     override fun participarEnViaje(viajeId: String, userId: String, participar: Boolean, onResult: (Boolean) -> Unit) {
         dataSource.participarEnViaje(viajeId, userId, participar, onResult)
     }
+    override fun obtenerViajePorId(id: String, onResult: (Viaje?) -> Unit) {
+        dataSource.obtenerViajePorId(id, onResult)
+    }
 }

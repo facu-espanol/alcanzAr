@@ -2,6 +2,7 @@ package com.example.alcanzar.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.alcanzar.domain.usecase.EliminarNotificacionUseCase
 import com.example.alcanzar.domain.usecase.ObtenerNotificacionDetalleUseCase
 import com.example.alcanzar.domain.usecase.ObtenerNotificacionesUseCase
 import com.example.alcanzar.presentation.state.NotificacionesUiState
@@ -11,7 +12,8 @@ import kotlinx.coroutines.launch
 
 class NotificacionesViewModel(
     private val obtenerNotificacionesUseCase: ObtenerNotificacionesUseCase,
-    private val obtenerNotificacionDetalleUseCase: ObtenerNotificacionDetalleUseCase
+    private val obtenerNotificacionDetalleUseCase: ObtenerNotificacionDetalleUseCase,
+    private val eliminarNotificacionUseCase: EliminarNotificacionUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(NotificacionesUiState())
@@ -32,5 +34,9 @@ class NotificacionesViewModel(
                 _uiState.value = _uiState.value.copy(notificacionSeleccionada = notificacion)
             }
         }
+    }
+
+    fun eliminarNotificacion(id: String) {
+        eliminarNotificacionUseCase(id)
     }
 }

@@ -8,6 +8,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import com.example.alcanzar.data.NotificacionRepositoryImpl
+import com.example.alcanzar.domain.usecase.EliminarNotificacionUseCase
 import com.example.alcanzar.domain.usecase.ObtenerNotificacionDetalleUseCase
 import com.example.alcanzar.domain.usecase.ObtenerNotificacionesUseCase
 import com.example.alcanzar.presentation.ui.calificacion.CalificacionActivity
@@ -26,7 +27,13 @@ class DetalleNotificacionActivity : ComponentActivity() {
         val repository = NotificacionRepositoryImpl()
         val obtenerNotificacionesUseCase = ObtenerNotificacionesUseCase(repository)
         val obtenerNotificacionDetalleUseCase = ObtenerNotificacionDetalleUseCase(repository)
-        viewModel = NotificacionesViewModel(obtenerNotificacionesUseCase, obtenerNotificacionDetalleUseCase)
+        val eliminarNotificacionUseCase = EliminarNotificacionUseCase(repository)
+
+        viewModel = NotificacionesViewModel(
+            obtenerNotificacionesUseCase,
+            obtenerNotificacionDetalleUseCase,
+            eliminarNotificacionUseCase
+        )
 
         val notificacionId = intent.getStringExtra("NOTIFICACION_ID") ?: ""
 
@@ -42,10 +49,22 @@ class DetalleNotificacionActivity : ComponentActivity() {
                     notificacion = uiState.notificacionSeleccionada,
                     onBackClick = { finish() },
                     onAccionClick = { tipo ->
+                        val context = this@DetalleNotificacionActivity
+                        val refId = uiState.notificacionSeleccionada?.idReferencia
+
                         when (tipo) {
-                            "VIAJE" -> startActivity(Intent(this, ViajesActivity::class.java))
-                            "PETICION" -> startActivity(Intent(this, PeticionesActivity::class.java))
-                            "CALIFICACION" -> startActivity(Intent(this, CalificacionActivity::class.java))
+                            "VIAJE" -> {
+                                // Aquí podrías usar refId para ir al detalle del viaje directamente
+                                context.startActivity(Intent(context, ViajesActivity::class.java))
+                            }
+                            "PETICION" -> {
+                                context.startActivity(Intent(context, PeticionesActivity::class.java))
+                            }
+                            "CALIFICACION" -> {
+                                val intent = Intent(context, CalificacionActivity::class.java).apply {
+                                    putExtra("VIAJE_ID", refId)
+                                }
+                                context.startActivity(intent)                            }
                         }
                     }
                 )

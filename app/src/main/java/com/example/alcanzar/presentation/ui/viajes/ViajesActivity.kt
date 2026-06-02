@@ -50,6 +50,12 @@ class ViajesActivity : ComponentActivity() {
                         DetalleViajeActivity.viajeSeleccionado = viaje
                         startActivity(Intent(this, DetalleViajeActivity::class.java))
                     },
+                    onConductorClick = { conductorId ->
+                        val intent = Intent(this, PerfilActivity::class.java).apply {
+                            putExtra("USER_ID", conductorId)
+                        }
+                        startActivity(intent)
+                    },
                     onPerfilClick = {
                         startActivity(
                             Intent(this, PerfilActivity::class.java)

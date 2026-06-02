@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.example.alcanzar.data.CalificacionRepositoryImpl
+import com.example.alcanzar.data.ViajeRepositoryImpl
+import com.example.alcanzar.data.datasource.ViajeFirestoreDataSource
 import com.example.alcanzar.data.session.SessionManager
 import com.example.alcanzar.domain.model.Viaje
 import com.example.alcanzar.domain.usecase.CrearCalificacionUseCase
@@ -24,18 +26,43 @@ class CalificacionActivity : ComponentActivity() {
         val repository = CalificacionRepositoryImpl(db)
         val useCase = CrearCalificacionUseCase(repository)
         val viewModel = CalificacionViewModel(useCase)
-
+        val viajeId = intent.getStringExtra("VIAJE_ID")
         val miId = SessionManager.obtenerUsuarioId(this) ?: ""
 
+        if (viajeId != null) {
+            val viajeRepo = ViajeRepositoryImpl(ViajeFirestoreDataSource(db))
+            viajeRepo.obtenerViajePorId(viajeId) { viaje ->
+                val viajeFinal = viaje ?: createStagingViaje(miId)
+                renderScreen(viajeFinal, miId, viewModel)
+            }
+        } else if (viajeParaCalificar != null) {
+            renderScreen(viajeParaCalificar!!, miId, viewModel)
+        } else {
+            renderScreen(createStagingViaje(miId), miId, viewModel)
+        }
+    }
+
+    private fun createStagingViaje(miId: String) = Viaje(
+        id = "staging_id",
+        conductorId = "admin_user",
+        conductorNombre = "Facundo (Admin)",
+        ciudadOrigen = "Staging",
+        ciudadDestino = "Prueba de Estética",
+        idPasajeros = listOf(miId)
+    )
+
+    private fun renderScreen(viaje: Viaje, miId: String, viewModel: CalificacionViewModel) {
         setContent {
             AlcanzARTheme {
-                viajeParaCalificar?.let { viaje ->
-                    CalificacionScreen(
-                        viewModel = viewModel,
-                        viaje = viaje,
-                        miId = miId
-                    )
-                }
+                CalificacionScreen(
+                    viewModel = viewModel,
+                    viaje = viaje,
+                    miId = miId,
+                    onFinish = {
+                        // Navegación inmediata al finalizar
+                        finish()
+                    }
+                )
             }
         }
     }
