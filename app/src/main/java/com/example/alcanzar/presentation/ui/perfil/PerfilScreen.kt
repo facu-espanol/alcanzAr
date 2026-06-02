@@ -1,5 +1,9 @@
 package com.example.alcanzar.presentation.ui.perfil
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.util.Base64
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -11,13 +15,14 @@ import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -65,7 +70,7 @@ fun PerfilScreen(
                         .padding(24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    // Avatar / Icono de Perfil
+                    // Avatar / Foto de Perfil (Base64)
                     Box(
                         modifier = Modifier
                             .size(120.dp)
@@ -73,12 +78,32 @@ fun PerfilScreen(
                             .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)),
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.AccountCircle,
-                            contentDescription = "Avatar",
-                            modifier = Modifier.size(100.dp),
-                            tint = MaterialTheme.colorScheme.primary
-                        )
+                        val bitmap = remember(usuario?.fotoUrl) {
+                            if (!usuario?.fotoUrl.isNullOrBlank()) {
+                                try {
+                                    val imageBytes = Base64.decode(usuario?.fotoUrl, Base64.DEFAULT)
+                                    BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+                                } catch (e: Exception) {
+                                    null
+                                }
+                            } else null
+                        }
+
+                        if (bitmap != null) {
+                            Image(
+                                bitmap = bitmap.asImageBitmap(),
+                                contentDescription = "Foto de perfil",
+                                modifier = Modifier.fillMaxSize(),
+                                contentScale = ContentScale.Crop
+                            )
+                        } else {
+                            Icon(
+                                imageVector = Icons.Default.AccountCircle,
+                                contentDescription = "Avatar",
+                                modifier = Modifier.size(100.dp),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))

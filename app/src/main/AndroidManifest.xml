@@ -44,6 +44,15 @@
         <activity
             android:name=".presentation.ui.perfil.PerfilActivity"
             android:exported="false" />
+        <activity
+            android:name=".presentation.ui.notificaciones.NotificacionesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.ui.notificaciones.DetalleNotificacionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.ui.calificacion.CalificacionActivity"
+            android:exported="false" />
         <!-- Pantalla de bienvenida -->
         <activity android:name=".presentation.ui.bienvenida.BienvenidaActivity" />
         <activity android:name=".presentation.ui.detalleviaje.DetalleViajeActivity"

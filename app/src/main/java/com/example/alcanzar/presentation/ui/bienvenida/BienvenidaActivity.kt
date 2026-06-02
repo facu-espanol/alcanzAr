@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import com.example.alcanzar.presentation.ui.acerca.AcercaActivity
 import com.example.alcanzar.presentation.ui.crearpeticion.CrearPeticionActivity
 import com.example.alcanzar.presentation.ui.crearviaje.CrearViajeActivity
+import com.example.alcanzar.presentation.ui.notificaciones.NotificacionesActivity
 import com.example.alcanzar.presentation.ui.perfil.PerfilActivity
 import com.example.alcanzar.presentation.ui.peticiones.PeticionesActivity
 import com.example.alcanzar.presentation.ui.viajes.ViajesActivity
@@ -53,6 +54,14 @@ class BienvenidaActivity : ComponentActivity() {
                             Intent(
                                 this,
                                 CrearPeticionActivity::class.java
+                            )
+                        )
+                    },
+                    onNotificacionesClick = {
+                        startActivity(
+                            Intent(
+                                this,
+                                NotificacionesActivity::class.java
                             )
                         )
                     }

@@ -3,15 +3,12 @@ package com.example.alcanzar.presentation.ui.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -27,7 +24,8 @@ fun AppDrawer(
     onViajesClick: () -> Unit,
     onAcercaClick: () -> Unit,
     onCrearViajeClick: () -> Unit,
-    onCrearPeticionClick: () -> Unit
+    onCrearPeticionClick: () -> Unit,
+    onNotificacionesClick: () -> Unit = {}
 ) {
 
     ModalDrawerSheet(
@@ -87,7 +85,7 @@ fun AppDrawer(
         DrawerItem(
             icon = Icons.Default.Notifications,
             text = "Notificaciones",
-            onClick = { }
+            onClick = onNotificacionesClick
         )
 
         HorizontalDivider(

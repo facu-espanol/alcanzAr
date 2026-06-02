@@ -5,7 +5,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
-import androidx.compose.material3.HorizontalDivider
 import com.example.alcanzar.presentation.ui.components.AppDrawer
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -22,7 +21,8 @@ fun BienvenidaScreen(
     onPeticionesClick: () -> Unit,
     onViajesClick: () -> Unit,
     onCrearViajeClick: () -> Unit,
-    onCrearPeticionClick: () -> Unit
+    onCrearPeticionClick: () -> Unit,
+    onNotificacionesClick: () -> Unit
 ) {
     val drawerState =
         rememberDrawerState(
@@ -77,6 +77,12 @@ fun BienvenidaScreen(
                     scope.launch {
                         drawerState.close()
                         onCrearPeticionClick()
+                    }
+                },
+                onNotificacionesClick = {
+                    scope.launch {
+                        drawerState.close()
+                        onNotificacionesClick()
                     }
                 }
 
